@@ -105,6 +105,7 @@ import excel "temp_main.xlsx", sheet("Raw Lockdown Data") firstrow clear
   gen weightedtotalscore = weighted_hosp + weighted_retail + weighted_primary + weighted_secondary
   xtile totalquintile = weightedtotalscore, nquantiles(5)
   xtile totalquartile = weightedtotalscore, nquantiles(4)
+  
 
 *need to drop COUNTY (Rutland - E06000017) (Isle of Scilly - E06000053) - (City of London - E09000001*) (Mendip - E07000188) these are not reflected in Vaccine Data 
 * city of london vaccine data is normally reflected in hackney. has the same lockdown score so just dropped 
@@ -112,6 +113,7 @@ import excel "temp_main.xlsx", sheet("Raw Lockdown Data") firstrow clear
 drop if inlist(onscode,  "E06000017", "E06000053", "E09000001", "E07000188")
 sort laname
 
+cd "C:\Users\25943553\OneDrive - MMU\03 DISSERTATION\STATA\DiD"
 save "Lockdown Dataset COMP.dta", replace
 clear
 
@@ -150,15 +152,13 @@ label variable mmr1_24m "MMR1 % of Children at 2 years"
 	
 	replace onscode = "E06000066" if onscode == "E10000027" // //Somerset E10000027 to E06000066 (most recent ONS code)
 	
-
+cd "C:\Users\25943553\OneDrive - MMU\03 DISSERTATION\STATA\DiD"
 save "MMR Dataset COMP.dta", replace
 capture erase "temp_main.xlsx"
    
 **#3 NOMIS
 // Note four dimensions of poverty are employment, education, health/disability, and housing
 
-**#3 NOMIS
-* Defined right here so you can highlight just this block!
 local repo "https://raw.githubusercontent.com/jubo-git/Project/main"
 local datasets ethnic_group_2021 deprivation_2021 religion_2021
 
@@ -187,30 +187,33 @@ drop if inlist(area, "lacu2023:Rutland", "lacu2023:Isles of Scilly", "lacu2023:W
 drop if substr(onscode, 1, 1) == "W"
 
 gen deprivation_score = (1*householdisdeprivedinonedim) + (2*householdisdeprivedintwodim) + (3*householdisdeprivedinthreed) + (4*householdisdeprivedinfourdi)
+cd "C:\Users\25943553\OneDrive - MMU\03 DISSERTATION\STATA\DiD"
 save "Nomis.dta", replace
 
 
-**#4 - Creating Usable Dataset 
+**#4 Creating Usable Dataset 
 
 //Loading and combining both 
 clear
 use "MMR Dataset COMP.dta"
 merge m:1 onscode using "Lockdown Dataset COMP.dta", nogenerate
 drop laname code sumsociald // is the same for every onscode
-
+cd "C:\Users\25943553\OneDrive - MMU\03 DISSERTATION\STATA\DiD"
 save "Lockdown_MMR_Data.dta", replace
 clear 
 
 **#5 Combining NOMIS, Lockdown and Vaccine
 clear
+cd "C:\Users\25943553\OneDrive - MMU\03 DISSERTATION\STATA\DiD"
 use "Lockdown_MMR_Data.dta"
 merge m:1 onscode using"Nomis.dta", nogenerate
+cd "C:\Users\25943553\OneDrive - MMU\03 DISSERTATION\STATA\DiD"
 save "Lockdown_MMR_NOMIS", replace
 drop area
 
 //need to figure out Combria and Northhampshire NOMIS data gap (come back too)
 
- **#6 - Data Processing 
+ **#6  Data Processing 
  
  *mmr1_24m
 	* Quintile
@@ -290,10 +293,17 @@ egen median = median(totalquintile)
 gen treated = (totalquintile > median)
 gen did = treated * post
 
+use ESS5GBdiagnostics 
+ssc install regcheck	
+
 	**Basic DiD 
 	regress mmr1_24m treated post did, vce(cluster onscode)
+	regcheck
 	regress mmr1_5y  treated post did, vce(cluster onscode)
 	regress mmr2_5y  treated post did, vce(cluster onscode)
+	
+	
+	
 	
 	**With NOMIS 
 	//referene to white, no religion/notanswered, householdisnotdeprivedinany 
@@ -306,6 +316,7 @@ gen did = treated * post
 	
 	estat vif
 
+	//Checking 
 
 	* Model 2: MMR1 at 5 Years
 	regress mmr1_5y treated post did asianasianbritishorasianwe blackblackbritishblackwels mixedormultipleethnicgroups otherethnicgroup 	householdisdeprivedinonedim householdisdeprivedintwodim householdisdeprivedinthreed householdisdeprivedinfourdi christian buddhist 		hindu jewish muslim sikh otherreligion , vce(cluster onscode)
