@@ -1,15 +1,25 @@
-//git add .
-//git commit -m "Updated dissertation do-file"
-//git push origin main
+**# 0 GitHub Saving
+cd "C:\Users\25943553\OneDrive - MMU\03 DISSERTATION\STATA\DiD"
+
+** 2. Setup Git (You only need to run these next two lines ONCE ever)
+!git init
+!git remote add origin https://github.com/jubo-git/Project.git
+
+** 3. Save and Push (Your everyday block)
+!git add "Combined Lockdown and MMR.do"
+!git commit -m "Updated Do-File with GitHub Links"
+!git push -u origin main
+
 
 **#1 Processing Lockdown Data to be Comp. with Vaccine Data
 
 **import ALL raw lockdown data - importing full dataset and filtering in STATA to allow for reproducibility. This can be run in full using the "Combining MMR and Lockdown Score" excel sheet
 
-local root "C:/Users/`c(username)'/OneDrive - MMU/03 DISSERTATION/DATASETS"
-import excel "`root'/Combining MMR and Lockdown Score.xlsx", sheet("Raw Lockdown Data") firstrow clear
+local repo "https://raw.githubusercontent.com/jubo-git/Project/main"
 
-
+//Primary dataset
+copy "`repo'/Combining%20MMR%20and%20Lockdown%20Score.xlsx" "temp_main.xlsx", replace
+import excel "temp_main.xlsx", sheet("Raw Lockdown Data") firstrow clear
 //Editingdataset
 //use "Lockdown Dataset COMP.dta" 
 
@@ -106,9 +116,8 @@ save "Lockdown Dataset COMP.dta", replace
 clear
 
 **#2 - Vaccine Processing 
-//Home - importing vaccine data (this all pulls from the excel sheet named Combining MMR and Lockdown Score )
-local root "C:/Users/`c(username)'/OneDrive - MMU/03 DISSERTATION/DATASETS"
-import excel "`root'/Combining MMR and Lockdown Score.xlsx", sheet("Raw MMR Dataset") firstrow clear
+//importing vaccine data (this all pulls from the excel sheet named Combining MMR and Lockdown Score )
+import excel "temp_main.xlsx", sheet("Raw MMR Dataset") firstrow clear
 
 
 //tidying 
@@ -143,36 +152,43 @@ label variable mmr1_24m "MMR1 % of Children at 2 years"
 	
 
 save "MMR Dataset COMP.dta", replace
-
+capture erase "temp_main.xlsx"
    
 **#3 NOMIS
 // Note four dimensions of poverty are employment, education, health/disability, and housing
 
-local root "C:/Users/`c(username)'/OneDrive - MMU/03 DISSERTATION/DATASETS"
-local path "`root'/NOMIS"
+**#3 NOMIS
+* Defined right here so you can highlight just this block!
+local repo "https://raw.githubusercontent.com/jubo-git/Project/main"
 local datasets ethnic_group_2021 deprivation_2021 religion_2021
 
-local i = 1
 foreach group of local datasets {
-    import excel "`path'\\`group'.xlsx", sheet("Data") cellrange(A8) firstrow clear
+    copy "`repo'/`group'.xlsx" "temp_`group'.xlsx", replace
+    import excel "temp_`group'.xlsx", sheet("Data") cellrange(A8) firstrow clear
+    
     rename *, lower
-	keep if substr(area, 1, 4) == "lacu"
+    keep if substr(area, 1, 4) == "lacu"
     rename b onscode
-	drop if missing(onscode)
-    tempfile t`i'
-    save `t`i''
-    local ++i
+    drop if missing(onscode)
+    
+    * Name the tempfile dynamically using the dataset name itself
+    tempfile t_`group'
+    save "`t_`group''", replace    
+    capture erase "temp_`group'.xlsx"
 }
 
-use `t1', clear
-merge 1:1 onscode using `t2', nogenerate
-merge 1:1 onscode using `t3', nogenerate
+* Combine the datasets using their explicit tempfile names
+use "`t_ethnic_group_2021'", clear
+merge 1:1 onscode using "`t_deprivation_2021'", nogenerate
+merge 1:1 onscode using "`t_religion_2021'", nogenerate
 
-drop if inlist(area, "lacu2023:Rutland", "lacu2023:Isles of Scilly", "lacu2023:Westmorland and Furness",  "lacu2023:City of London" )
+* Clean up and calculate scores
+drop if inlist(area, "lacu2023:Rutland", "lacu2023:Isles of Scilly", "lacu2023:Westmorland and Furness", "lacu2023:City of London" )
 drop if substr(onscode, 1, 1) == "W"
+
 gen deprivation_score = (1*householdisdeprivedinonedim) + (2*householdisdeprivedintwodim) + (3*householdisdeprivedinthreed) + (4*householdisdeprivedinfourdi)
 save "Nomis.dta", replace
-clear
+
 
 **#4 - Creating Usable Dataset 
 
