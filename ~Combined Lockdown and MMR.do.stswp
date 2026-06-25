@@ -1,0 +1,299 @@
+
+
+**#1 Processing Lockdown Data to be Comp. with Vaccine Data
+
+**import ALL raw lockdown data - importing full dataset and filtering in STATA to allow for reproducibility. This can be run in full using the "Combining MMR and Lockdown Score" excel sheet
+
+local root "C:/Users/`c(username)'/OneDrive - MMU/03 DISSERTATION/DATASETS"
+import excel "`root'/Combining MMR and Lockdown Score.xlsx", sheet("Raw Lockdown Data") firstrow clear
+
+
+//Editingdataset
+//use "Lockdown Dataset COMP.dta" 
+
+**Tidying (generic and making variables more streamlined)
+
+	**mantain english data only 
+	drop Scotlandtier
+	drop if Country !="England"
+
+	rename *, lower
+	rename englandtiera tiera
+	rename englandtierb tierb
+	rename noindoormixing noindoormix
+	rename nooutdoormixing nooutmix
+
+	*National and Regional Data: Not required as the detail is held at the county and local authroity level 
+	
+	drop country region regioncode
+	**create a date function (to allow for averages later)
+	gen date = mdy(month,dayofmonth,2020)
+	format date %td
+	label variable date "Date of Restriction"
+	drop month dayofmonth 
+	
+	*need to rename LOCKDOWN data E10000002 to E06000060 as code changed in 2021
+	replace lacode = "E06000060" if lacode == "E10000002"
+	replace lacode = "E06000065" if lacode == "E10000023"
+	replace lacode = "E06000066" if lacode == "E10000027"
+	
+**COMBINING LOCAL AUTHORITY DATA: The vaccine data is held on a Geographical ONS Code. Lockdown data is held on local and county level. Pivot tables in Excel show that lockdown does not always match the level where the vaccine data is held. 
+
+	
+	replace lacode = "" if inlist(lacode, "E11000001", "E11000002", "E11000003")
+	replace lacode = "" if inlist(lacode, "E11000005", "E11000006", "E11000007")
+	replace lacode = "" if inlist(lacode, "E13000001", "E13000002")
+	gen onscode = countycode if lacode == ""
+	replace onscode = lacode if lacode != ""
+	duplicates drop onscode date, force
+	
+*Renaming onscode (after sense checked in excel)
+	replace laname = "Buckinghamshire" if onscode == "E06000060"
+	replace laname = "Cambridgeshire" if onscode == "E10000003"
+	replace laname = "Cumbria" if onscode == "E10000006"
+	replace laname = "Derbyshire" if onscode == "E10000007"
+	replace laname = "Devon" if onscode == "E10000008"
+	replace laname = "East Sussex" if onscode == "E10000011"
+	replace laname = "Essex" if onscode == "E10000012"
+	replace laname = "Gloucestershire" if onscode == "E10000013"
+	replace laname = "Hampshire" if onscode == "E10000014"
+	replace laname = "Hertfordshire" if onscode == "E10000015"
+	replace laname = "Kent" if onscode == "E10000016"
+	replace laname = "Lancashire" if onscode == "E10000017"
+	replace laname = "Leicestershire" if onscode == "E10000018"
+	replace laname = "Lincolnshire" if onscode == "E10000019"
+	replace laname = "Norfolk" if onscode == "E10000020"
+	replace laname = "North Yorkshire" if onscode == "E10000023"
+	replace laname = "Northamptonshire" if onscode == "E10000021"
+	replace laname = "Nottinghamshire" if onscode == "E10000024"
+	replace laname = "Oxfordshire" if onscode == "E10000025"
+	replace laname = "Somerset" if onscode == "E10000027"
+	replace laname = "Staffordshire" if onscode == "E10000028"
+	replace laname = "Suffolk" if onscode == "E10000029"
+	replace laname = "Surrey" if onscode == "E10000030"
+	replace laname = "Warwickshire" if onscode == "E10000031"
+	replace laname = "West Sussex" if onscode == "E10000032"
+	replace laname = "Worcestershire" if onscode == "E10000034"
+		
+	gen highest_tier = max(tiera, tierb)
+	gen w_hospshut   = hospitalityshut * highest_tier
+	gen w_retail     = retailshut      * highest_tier
+	gen w_primary    = primaryclosed   * highest_tier
+	gen w_secondary  = secondaryclosed * highest_tier
+		
+		
+	collapse (sum) sumsociald = socialdistancing /// this is included but is technically the same for all LA's 
+		 (sum) weighted_hosp = w_hospshut  ///
+		 (sum) weighted_retail = w_retail  ///
+		 (sum) weighted_primary = w_primary ///
+		 (sum) weighted_secondary = w_secondary ///
+		 (max) maxtiera = tiera ///
+		 (max) maxtierb = tierb, by(onscode laname)
+		  
+  gen weightedtotalscore = weighted_hosp + weighted_retail + weighted_primary + weighted_secondary
+  xtile totalquintile = weightedtotalscore, nquantiles(5)
+  xtile totalquartile = weightedtotalscore, nquantiles(4)
+
+*need to drop COUNTY (Rutland - E06000017) (Isle of Scilly - E06000053) - (City of London - E09000001*) (Mendip - E07000188) these are not reflected in Vaccine Data 
+* city of london vaccine data is normally reflected in hackney. has the same lockdown score so just dropped 
+
+drop if inlist(onscode,  "E06000017", "E06000053", "E09000001", "E07000188")
+sort laname
+
+save "Lockdown Dataset COMP.dta", replace
+clear
+
+**#2 - Vaccine Processing 
+//Home - importing vaccine data (this all pulls from the excel sheet named Combining MMR and Lockdown Score )
+local root "C:/Users/`c(username)'/OneDrive - MMU/03 DISSERTATION/DATASETS"
+import excel "`root'/Combining MMR and Lockdown Score.xlsx", sheet("Raw MMR Dataset") firstrow clear
+
+
+//tidying 
+rename *, lower
+label variable mmr2_5y "MMR2 % of Children at 5 years"
+label variable mmr1_5y "MMR1 % of Children at 5 years"
+label variable mmr1_24m "MMR1 % of Children at 2 years"
+
+//Although there are boundary changes - the UK goverment maintains time-series data for all the combined authorties. Therefore the most up-to-date ONS code is backdated for consistency
+
+	
+	drop if inlist(onscode, "E06000029", "E06000061", "E06000062") //North Northamptonshire (E06000061) new ONS with no pre-lockdown data - drop // West Northamptonshire (E06000062) new ONS with no pre-lockdown data - drop  // Goverment data DROPS Poole.
+	replace onscode = "E06000058" if onscode == "E06000028" //Bournemouth, Christchurch and Poole: 2014 - 2019 Bournemouth (E06000028) & Poole (E06000029). Combined to Bournemouth, Christchurch and Poole	(E06000058) in 2020. 
+	replace localauthority = "Bournemouth, Christchurch and Poole" if onscode == "E06000058"
+	
+	
+	replace localauthority = "Westminster" if onscode == "E09000033" ////Westminster and City of Westminster follow chronological and are combined (E09000033)
+
+	replace localauthority = "Bristol" if onscode == "E06000023" // Just renaming Bristol, City of to Bristol - both mantained (E06000023) and there was no boundary change 
+	
+	replace onscode = "E06000060" if onscode == "E10000002" //Buckinghamshire boundary did not change - it was previously made up of multiple councils but was then viewed as one unitary area. Does not affect the vaccine measurement spread therefore the dataset is combined rename E10000002 to E06000060
+	
+	replace localauthority = "Herefordshire" if onscode == "E06000019" //Hereforshire mantains code, just had name change so rename E06000019 to Herefordshire
+	
+	replace onscode = "E06000059" if onscode == "E10000009" //Dorset mantained in goverment data, rename E10000009 to E06000059
+
+	replace localauthority = "Kingston upon Hull" if onscode == "E06000010" 	//rename all E06000010 to Kingston upon Hull
+	
+	replace onscode = "E06000065" if onscode == "E10000023" //NorthYorkshire  E10000023 to E06000065 (the most recent ONS code)
+	
+	replace onscode = "E06000066" if onscode == "E10000027" // //Somerset E10000027 to E06000066 (most recent ONS code)
+	
+
+save "MMR Dataset COMP.dta", replace
+
+   
+**#3 NOMIS
+// Note four dimensions of poverty are employment, education, health/disability, and housing
+
+local root "C:/Users/`c(username)'/OneDrive - MMU/03 DISSERTATION/DATASETS"
+local path "`root'/NOMIS"
+local datasets ethnic_group_2021 deprivation_2021 religion_2021
+
+local i = 1
+foreach group of local datasets {
+    import excel "`path'\\`group'.xlsx", sheet("Data") cellrange(A8) firstrow clear
+    rename *, lower
+	keep if substr(area, 1, 4) == "lacu"
+    rename b onscode
+	drop if missing(onscode)
+    tempfile t`i'
+    save `t`i''
+    local ++i
+}
+
+use `t1', clear
+merge 1:1 onscode using `t2', nogenerate
+merge 1:1 onscode using `t3', nogenerate
+
+drop if inlist(area, "lacu2023:Rutland", "lacu2023:Isles of Scilly", "lacu2023:Westmorland and Furness",  "lacu2023:City of London" )
+drop if substr(onscode, 1, 1) == "W"
+gen deprivation_score = (1*householdisdeprivedinonedim) + (2*householdisdeprivedintwodim) + (3*householdisdeprivedinthreed) + (4*householdisdeprivedinfourdi)
+save "Nomis.dta", replace
+clear
+
+**#4 - Creating Usable Dataset 
+
+//Loading and combining both 
+clear
+use "MMR Dataset COMP.dta"
+merge m:1 onscode using "Lockdown Dataset COMP.dta", nogenerate
+drop laname code sumsociald // is the same for every onscode
+
+save "Lockdown_MMR_Data.dta", replace
+clear 
+
+**#5 Combining NOMIS, Lockdown and Vaccine
+clear
+use "Lockdown_MMR_Data.dta"
+merge m:1 onscode using"Nomis.dta", nogenerate
+save "Lockdown_MMR_NOMIS", replace
+drop area
+
+//need to figure out Combria and Northhampshire NOMIS data gap (come back too)
+
+ **#6 - Data Processing 
+ 
+ *mmr1_24m
+	* Quintile
+		bysort totalquintile year: egen mean_q5_mmr24m = mean(mmr1_24m)
+
+		twoway (line mean_q5_mmr24m year if totalquintile==1) ///
+			   (line mean_q5_mmr24m year if totalquintile==2) ///
+			   (line mean_q5_mmr24m year if totalquintile==3) ///
+			   (line mean_q5_mmr24m year if totalquintile==4) ///
+			   (line mean_q5_mmr24m year if totalquintile==5), ///
+			   legend(label(1 "Q1 (Lowest)") label(2 "Q2") label(3 "Q3") label(4 "Q4") label(5 "Q5 (Highest)")) ///
+			   xline(2020.9) xlabel(2014(1)2025) ///
+			   title("MMR1 at 24 months rates by lockdown exposure quintile")
+
+	* Quartile
+		bysort totalquartile year: egen mean_q4_mmr24m = mean(mmr1_24m)
+
+		twoway (line mean_q4_mmr24m year if totalquartile==1) ///
+			   (line mean_q4_mmr24m year if totalquartile==2) ///
+			   (line mean_q4_mmr24m year if totalquartile==3) ///
+			   (line mean_q4_mmr24m year if totalquartile==4), ///
+			   legend(label(1 "Q1 (Lowest)") label(2 "Q2") label(3 "Q3") label(4 "Q4 (Highest)")) ///
+			   xline(2020.9) xlabel(2014(1)2025) ///
+			   title("MMR1 at 24 months rates by lockdown exposure quartile")
+	
+*mmr1_5y
+	*quintile
+		bysort totalquintile year: egen mean_q5_mmr1_5y = mean(mmr1_5y)
+
+		twoway (line mean_q5_mmr1_5y year if totalquintile==1) ///
+		   (line mean_q5_mmr1_5y year if totalquintile==2) ///
+		   (line mean_q5_mmr1_5y year if totalquintile==3) ///
+		   (line mean_q5_mmr1_5y year if totalquintile==4) ///
+		   (line mean_q5_mmr1_5y year if totalquintile==5), ///
+		   legend(label(1 "Q1 (Lowest)") label(2 "Q2") label(3 "Q3") label(4 "Q4") label(5 "Q5 (Highest)")) ///
+		   xline(2020.9) xlabel(2014(1)2025) ///
+		   title("MMR1 at 5 years rates by lockdown exposure quintile")
+
+	*quartile
+		bysort totalquartile year: egen mean_q4_mmr1_5y = mean(mmr1_5y)
+
+		twoway (line mean_q4_mmr1_5y year if totalquartile==1) ///
+			   (line mean_q4_mmr1_5y year if totalquartile==2) ///
+			   (line mean_q4_mmr1_5y year if totalquartile==3) ///
+			   (line mean_q4_mmr1_5y year if totalquartile==4), ///
+			   legend(label(1 "Q1 (Lowest)") label(2 "Q2") label(3 "Q3") label(4 "Q4 (Highest)")) ///
+			   xline(2020.9) xlabel(2014(1)2025) ///
+			   title("MMR1 at 5 years rates by lockdown exposure quartile")
+*mmr2_5y
+	*quintile 
+		bysort totalquintile year: egen mean_q5_mmr2_5y = mean(mmr2_5y)
+
+		twoway (line mean_q5_mmr2_5y year if totalquintile==1) ///
+		   (line mean_q5_mmr2_5y year if totalquintile==2) ///
+		   (line mean_q5_mmr2_5y year if totalquintile==3) ///
+		   (line mean_q5_mmr2_5y year if totalquintile==4) ///
+		   (line mean_q5_mmr2_5y year if totalquintile==5), ///
+		   legend(label(1 "Q1 (Lowest)") label(2 "Q2") label(3 "Q3") label(4 "Q4") label(5 "Q5 (Highest)")) ///
+		   xline(2020.9) xlabel(2014(1)2025) ///
+		   title("MMR2 at 5 years rates by lockdown exposure quintile")
+
+	*quartile
+		bysort totalquartile year: egen mean_q4_mmr2_5y = mean(mmr2_5y)
+
+		twoway (line mean_q4_mmr2_5y year if totalquartile==1) ///
+			   (line mean_q4_mmr2_5y year if totalquartile==2) ///
+			   (line mean_q4_mmr2_5y year if totalquartile==3) ///
+			   (line mean_q4_mmr2_5y year if totalquartile==4), ///
+			   legend(label(1 "Q1 (Lowest)") label(2 "Q2") label(3 "Q3") label(4 "Q4 (Highest)")) ///
+			   xline(2020.9) xlabel(2014(1)2025) ///
+			   title("MMR2 at 5 years rates by lockdown exposure quartile")
+
+**#7 Difference in Difference
+encode onscode, gen(ons_id)
+gen post = (year >= 2020)
+egen median = median(totalquintile)
+gen treated = (totalquintile > median)
+gen did = treated * post
+
+	**Basic DiD 
+	regress mmr1_24m treated post did, vce(cluster onscode)
+	regress mmr1_5y  treated post did, vce(cluster onscode)
+	regress mmr2_5y  treated post did, vce(cluster onscode)
+	
+	**With NOMIS 
+	//referene to white, no religion/notanswered, householdisnotdeprivedinany 
+	
+	* Model 1: MMR1 at 24 Months
+	di "--- DiD Regression: MMR1 at 24 Months ---"
+	regress mmr1_24m treated post did `nomis_controls', vce(cluster onscode)
+	
+	regress mmr1_24m treated post did asianasianbritishorasianwe blackblackbritishblackwels mixedormultipleethnicgroups otherethnicgroup 	householdisdeprivedinonedim householdisdeprivedintwodim householdisdeprivedinthreed householdisdeprivedinfourdi christian buddhist 		hindu jewish muslim sikh otherreligion , vce(cluster onscode)
+	
+	estat vif
+
+
+	* Model 2: MMR1 at 5 Years
+	regress mmr1_5y treated post did asianasianbritishorasianwe blackblackbritishblackwels mixedormultipleethnicgroups otherethnicgroup 	householdisdeprivedinonedim householdisdeprivedintwodim householdisdeprivedinthreed householdisdeprivedinfourdi christian buddhist 		hindu jewish muslim sikh otherreligion , vce(cluster onscode)
+	
+
+	* Model 3: MMR2 at 5 Years
+	regress mmr2_5y treated post did asianasianbritishorasianwe blackblackbritishblackwels mixedormultipleethnicgroups otherethnicgroup 	householdisdeprivedinonedim householdisdeprivedintwodim householdisdeprivedinthreed householdisdeprivedinfourdi christian buddhist 		hindu jewish muslim sikh otherreligion , vce(cluster onscode)
+	
+	
