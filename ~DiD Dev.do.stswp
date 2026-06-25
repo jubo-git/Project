@@ -1,0 +1,8 @@
+**#0 GitHub Setup
+
+cd "C:\Users\25943553\OneDrive - MMU\03 DISSERTATION\STATA\DiD"
+
+//Saving
+!git add .
+!git commit -m "Uploading Datasets (using 25943553)"
+!git push -u origin main

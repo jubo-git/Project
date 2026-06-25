@@ -6,8 +6,8 @@ cd "C:\Users\25943553\OneDrive - MMU\03 DISSERTATION\STATA\DiD"
 !git remote add origin https://github.com/jubo-git/Project.git
 
 ** 3. Save and Push (Your everyday block)
-!git add "Combined Lockdown and MMR.do"
-!git commit -m "Updated Do-File with GitHub Links"
+!git add .
+!git commit -m "Uploading Datasets (using 25943553)"
 !git push -u origin main
 
 
