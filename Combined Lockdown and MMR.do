@@ -1,3 +1,7 @@
+//git add .
+//git commit -m "Updated dissertation do-file"
+//git push origin main
+
 **#1 Processing Lockdown Data to be Comp. with Vaccine Data
 
 **import ALL raw lockdown data - importing full dataset and filtering in STATA to allow for reproducibility. This can be run in full using the "Combining MMR and Lockdown Score" excel sheet
