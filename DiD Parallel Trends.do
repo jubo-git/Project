@@ -75,3 +75,7 @@ use "https://raw.githubusercontent.com/jubo-git/Project/main/data_clean/Lockdown
 			   title("MMR2 at 5 years rates by lockdown exposure quartile")
 
 
+//Saving
+!git add .
+!git commit -m "Parallel Trends Do-File"
+!git push -u origin main	

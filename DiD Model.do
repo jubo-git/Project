@@ -1,0 +1,53 @@
+**#0 GitHub Setup
+use "https://raw.githubusercontent.com/jubo-git/Project/main/data_clean/Lockdown_MMR_NOMIS.dta"
+
+**#7 Difference in Difference
+encode onscode, gen(ons_id)
+gen post = (year >= 2020)
+egen median = median(totalquintile)
+gen treated = (totalquintile > median)
+gen did = treated * post
+
+use ESS5GBdiagnostics 
+ssc install regcheck	
+
+	**Basic DiD - This is the most basic model (IN THIS CASE). There is not "indivual" vaccine measurements, rather they are aggregated at the Local Authority level is the % at the ONS level, so varies exclusively at the group level. Clustering is required for autocorrelation / serial correlation. there is 142 
+	regress mmr1_24m treated post did, vce(cluster onscode)
+	
+	
+	regcheck
+	
+	
+	
+	
+	
+	regress mmr1_5y  treated post did, vce(cluster onscode)
+	regress mmr2_5y  treated post did, vce(cluster onscode)
+	
+	
+	
+	
+	**With NOMIS 
+	//referene to white, no religion/notanswered, householdisnotdeprivedinany 
+	
+	* Model 1: MMR1 at 24 Months
+	di "--- DiD Regression: MMR1 at 24 Months ---"
+	regress mmr1_24m treated post did `nomis_controls', vce(cluster onscode)
+	
+	regress mmr1_24m treated post did asianasianbritishorasianwe blackblackbritishblackwels mixedormultipleethnicgroups otherethnicgroup 	householdisdeprivedinonedim householdisdeprivedintwodim householdisdeprivedinthreed householdisdeprivedinfourdi christian buddhist 		hindu jewish muslim sikh otherreligion , vce(cluster onscode)
+	
+	estat vif
+
+	//Checking 
+
+	* Model 2: MMR1 at 5 Years
+	regress mmr1_5y treated post did asianasianbritishorasianwe blackblackbritishblackwels mixedormultipleethnicgroups otherethnicgroup 	householdisdeprivedinonedim householdisdeprivedintwodim householdisdeprivedinthreed householdisdeprivedinfourdi christian buddhist 		hindu jewish muslim sikh otherreligion , vce(cluster onscode)
+	
+
+	* Model 3: MMR2 at 5 Years
+	regress mmr2_5y treated post did asianasianbritishorasianwe blackblackbritishblackwels mixedormultipleethnicgroups otherethnicgroup 	householdisdeprivedinonedim householdisdeprivedintwodim householdisdeprivedinthreed householdisdeprivedinfourdi christian buddhist 		hindu jewish muslim sikh otherreligion , vce(cluster onscode)
+	
+//Saving
+!git add .
+!git commit -m "DiD"
+!git push -u origin main	
