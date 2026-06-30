@@ -1,7 +1,6 @@
 **#0 GitHub Setup
 use "https://raw.githubusercontent.com/jubo-git/Project/main/data_clean/Lockdown_MMR_NOMIS.dta"
-encode onscode, gen(ons_id)
-gen post = (year >= 2020)
+
 
 	**Basic DiD -  There is not "indivual" vaccine measurements, rather they are aggregated by coverage at the Local Authority level. The variables (NOMIS measures) vary exclusively at this level, there is therefore no mixture of group and invidual data. Therefore the regression model is adjusted for group level serial correlation over time using the vce(cluster onscode function
 
@@ -47,7 +46,7 @@ gen post = (year >= 2020)
 	marginsplot, xdimension(post)
 
 	**Model 2.4: With NOMIS Controls
-	regress mmr1_5y i.tieraquintile##post asianasianbritishorasianwe blackblackbritishblackwels mixedormultipleethnicgroups otherethnicgroup householdisdeprivedinonedim householdisdeprivedintwodim householdisdeprivedinthreed householdisdeprivedinfourdi christian buddhist hindu jewish muslim sikh otherreligion, vce(cluster onscode)
+	regress mmr1_5y i.tieraquintile##post blackblackbritishblackwels otherethnicgroup householdisdeprivedinonedim householdisdeprivedinthreed householdisdeprivedinfourdi christian buddhist hindu jewish muslim sikh otherreligion, vce(cluster ons_id)
 	estat vif
 
 
@@ -67,7 +66,7 @@ gen post = (year >= 2020)
 	marginsplot, xdimension(post)
 
 	**Model 3.4: With NOMIS Controls
-	regress mmr2_5y i.tieraquintile##post asianasianbritishorasianwe blackblackbritishblackwels mixedormultipleethnicgroups otherethnicgroup householdisdeprivedinonedim householdisdeprivedintwodim householdisdeprivedinthreed householdisdeprivedinfourdi christian buddhist hindu jewish muslim sikh otherreligion, vce(cluster onscode)
+	regress mmr2_5y i.tieraquintile##post blackblackbritishblackwels otherethnicgroup householdisdeprivedinonedim householdisdeprivedinthreed householdisdeprivedinfourdi christian buddhist hindu jewish muslim sikh otherreligion, vce(cluster ons_id)
 	estat vif
 
 
@@ -107,7 +106,7 @@ gen post = (year >= 2020)
 	marginsplot, xdimension(post)
 
 	**Model 5.4: With NOMIS Controls
-	regress mmr1_5y i.tierbquintile##post asianasianbritishorasianwe blackblackbritishblackwels mixedormultipleethnicgroups otherethnicgroup householdisdeprivedinonedim householdisdeprivedintwodim householdisdeprivedinthreed householdisdeprivedinfourdi christian buddhist hindu jewish muslim sikh otherreligion, vce(cluster onscode)
+	regress mmr1_5y i.tierbquintile##post blackblackbritishblackwels otherethnicgroup householdisdeprivedinonedim householdisdeprivedinthreed householdisdeprivedinfourdi christian buddhist hindu jewish muslim sikh otherreligion, vce(cluster ons_id)
 	estat vif
 
 
@@ -127,7 +126,7 @@ gen post = (year >= 2020)
 	marginsplot, xdimension(post)
 
 	**Model 6.4: With NOMIS Controls
-	regress mmr2_5y i.tierbquintile##post asianasianbritishorasianwe blackblackbritishblackwels mixedormultipleethnicgroups otherethnicgroup householdisdeprivedinonedim householdisdeprivedintwodim householdisdeprivedinthreed householdisdeprivedinfourdi christian buddhist hindu jewish muslim sikh otherreligion, vce(cluster onscode)
+	regress mmr2_5y i.tierbquintile##post blackblackbritishblackwels otherethnicgroup householdisdeprivedinonedim householdisdeprivedinthreed householdisdeprivedinfourdi christian buddhist hindu jewish muslim sikh otherreligion, vce(cluster ons_id)
 	estat vif
 
 
@@ -167,7 +166,7 @@ gen post = (year >= 2020)
 	marginsplot, xdimension(post)
 
 	**Model 8.4: With NOMIS Controls
-	regress mmr1_5y i.complacency_quintile##post asianasianbritishorasianwe blackblackbritishblackwels mixedormultipleethnicgroups otherethnicgroup householdisdeprivedinonedim householdisdeprivedintwodim householdisdeprivedinthreed householdisdeprivedinfourdi christian buddhist hindu jewish muslim sikh otherreligion, vce(cluster onscode)
+	regress mmr1_5y i.complacency_quintile##post blackblackbritishblackwels otherethnicgroup householdisdeprivedinonedim householdisdeprivedinthreed householdisdeprivedinfourdi christian buddhist hindu jewish muslim sikh otherreligion, vce(cluster ons_id)
 	estat vif
 
 
@@ -187,12 +186,11 @@ gen post = (year >= 2020)
 	marginsplot, xdimension(post)
 
 	**Model 9.4: With NOMIS Controls
-	regress mmr2_5y i.complacency_quintile##post asianasianbritishorasianwe blackblackbritishblackwels mixedormultipleethnicgroups otherethnicgroup householdisdeprivedinonedim householdisdeprivedintwodim householdisdeprivedinthreed householdisdeprivedinfourdi christian buddhist hindu jewish muslim sikh otherreligion, vce(cluster onscode)
+	regress mmr2_5y i.complacency_quintile##post blackblackbritishblackwels otherethnicgroup householdisdeprivedinonedim householdisdeprivedinthreed householdisdeprivedinfourdi christian buddhist hindu jewish muslim sikh otherreligion, vce(cluster ons_id)
 	estat vif
 
 
 //Saving
-cd "C:\Users\25943553\OneDrive - MMU\03 DISSERTATION\STATA\DiD"
 !git pull
 !git add .
 !git commit -m "DiD by Tier A, Tier B, Complacency - Total removed"
