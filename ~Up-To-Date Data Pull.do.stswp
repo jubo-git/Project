@@ -199,5 +199,5 @@ save "data_clean/Lockdown_MMR_NOMIS.dta", replace
 
 ** 3. Save and Push Everything to GitHub (Now safely at the bottom)
 !git add .
-!git commit -m "Update of 3C's quartile and quintiles directories"
+!git commit -m "Update of cleaned data directories"
 !git push -u origin main

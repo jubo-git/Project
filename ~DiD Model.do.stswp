@@ -29,7 +29,10 @@ ssc install regcheck
 	**Model 1.4: With NOMIS Controls 
 	
 	//(Race (reference to White)) & (reference to Household is not Deprived) Religion (reference to no religion / not answered)
+	
 		//dropped asianasianbritishorasianwe due to high vif
+		
+		//Need to find time-dependent NOMIS results. Not census data
 		
 			regress mmr1_24m i.totalquartile##post 	blackblackbritishblackwels  otherethnicgroup householdisdeprivedinonedim householdisdeprivedinthreed householdisdeprivedinfourdi christian buddhist hindu jewish muslim sikh otherreligion, vce(cluster ons_id)
 		
