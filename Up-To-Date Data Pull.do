@@ -99,38 +99,11 @@ import excel "temp_main.xlsx", sheet("Raw Lockdown Data") firstrow clear
 		//Already in a ordinal scale with a max of 3 or 4 so no need to bin
 
 	**Complacency: Social Mixing Restrictions
-		xtile hospquartile   = weighted_hosp,   nquantiles(5)
-		xtile retailquartile = weighted_retail, nquantiles(5)
+		xtile hospquintile  = weighted_hosp,   nquantiles(5)
+		xtile retailquintile = weighted_retail, nquantiles(5)
 
 	//Note these are time-invariant
 
-
-**#Parallel Trends Means by Quartile
-
-
-	bysort primaryquintile year:   egen mean_primary_mmr24m   = mean(mmr1_24m)
-	bysort primaryquintile year:   egen mean_primary_mmr1_5y  = mean(mmr1_5y)
-	bysort primaryquintile year:   egen mean_primary_mmr2_5y  = mean(mmr2_5y)
-
-	bysort secondaryquintile year: egen mean_secondary_mmr24m  = mean(mmr1_24m)
-	bysort secondaryquintile year: egen mean_secondary_mmr1_5y = mean(mmr1_5y)
-	bysort secondaryquintile year: egen mean_secondary_mmr2_5y = mean(mmr2_5y)
-
-	bysort maxtiera year:          egen mean_tiera_mmr24m       = mean(mmr1_24m)
-	bysort maxtiera year:          egen mean_tiera_mmr1_5y      = mean(mmr1_5y)
-	bysort maxtiera year:          egen mean_tiera_mmr2_5y      = mean(mmr2_5y)
-
-	bysort maxtierb year:          egen mean_tierb_mmr24m       = mean(mmr1_24m)
-	bysort maxtierb year:          egen mean_tierb_mmr1_5y      = mean(mmr1_5y)
-	bysort maxtierb year:          egen mean_tierb_mmr2_5y      = mean(mmr2_5y)
-
-	bysort hospquintile year:      egen mean_hosp_mmr24m        = mean(mmr1_24m)
-	bysort hospquintile year:      egen mean_hosp_mmr1_5y       = mean(mmr1_5y)
-	bysort hospquintile year:      egen mean_hosp_mmr2_5y       = mean(mmr2_5y)
-
-	bysort retailquintile year:    egen mean_retail_mmr24m      = mean(mmr1_24m)
-	bysort retailquintile year:    egen mean_retail_mmr1_5y     = mean(mmr1_5y)
-	bysort retailquintile year:    egen mean_retail_mmr2_5y     = mean(mmr2_5y)
 	
 	
 	* Drop specific areas not reflected in Vaccine Data 
@@ -219,12 +192,41 @@ drop area
 encode onscode, gen(ons_id)
 gen post = (year >= 2020)
 
+
+**#Parallel Trends Means by Quintile
+
+	bysort totalquintile year: egen mean_q5_mmr24m  = mean(mmr1_24m)
+	bysort totalquintile year: egen mean_q5_mmr1_5y = mean(mmr1_5y)
+	bysort totalquintile year: egen mean_q5_mmr2_5y = mean(mmr2_5y)
+
+	bysort primaryquintile year:   egen mean_primary_mmr24m   = mean(mmr1_24m)
+	bysort primaryquintile year:   egen mean_primary_mmr1_5y  = mean(mmr1_5y)
+	bysort primaryquintile year:   egen mean_primary_mmr2_5y  = mean(mmr2_5y)
+
+	bysort secondaryquintile year: egen mean_secondary_mmr24m  = mean(mmr1_24m)
+	bysort secondaryquintile year: egen mean_secondary_mmr1_5y = mean(mmr1_5y)
+	bysort secondaryquintile year: egen mean_secondary_mmr2_5y = mean(mmr2_5y)
+
+	bysort maxtiera year:          egen mean_tiera_mmr24m       = mean(mmr1_24m)
+	bysort maxtiera year:          egen mean_tiera_mmr1_5y      = mean(mmr1_5y)
+	bysort maxtiera year:          egen mean_tiera_mmr2_5y      = mean(mmr2_5y)
+
+	bysort maxtierb year:          egen mean_tierb_mmr24m       = mean(mmr1_24m)
+	bysort maxtierb year:          egen mean_tierb_mmr1_5y      = mean(mmr1_5y)
+	bysort maxtierb year:          egen mean_tierb_mmr2_5y      = mean(mmr2_5y)
+
+	bysort hospquintile year:      egen mean_hosp_mmr24m        = mean(mmr1_24m)
+	bysort hospquintile year:      egen mean_hosp_mmr1_5y       = mean(mmr1_5y)
+	bysort hospquintile year:      egen mean_hosp_mmr2_5y       = mean(mmr2_5y)
+
+	bysort retailquintile year:    egen mean_retail_mmr24m      = mean(mmr1_24m)
+	bysort retailquintile year:    egen mean_retail_mmr1_5y     = mean(mmr1_5y)
+	bysort retailquintile year:    egen mean_retail_mmr2_5y     = mean(mmr2_5y)
+	
 * Save final integrated dataset into clean data subfolder
 save "data_clean/Lockdown_MMR_NOMIS.dta", replace
 
-
 ** 3. Save and Push Everything to GitHub (Now safely at the bottom)
-
 
 !git add .
 !git commit -m "Update of 3C's: Just Quartiles and Embedding Means and ONS-ID"

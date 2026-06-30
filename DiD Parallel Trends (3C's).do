@@ -4,14 +4,12 @@ use "https://raw.githubusercontent.com/jubo-git/Project/main/data_clean/Lockdown
 **#Parallel Trends Notes 
 //This is the exposure categorisation. Ranking the LA by total lockdown score. D Richardson says deciles are more accurate. However, if this is not the case it needs to be consistently pre-chosen. 
 
-
+NEED TO RE-CREATE THE TOTAL Q5 
 **#Parallel Trends - Code
 
  *mmr1_24m
 	
 	* Quintile
-	
-
 		twoway (line mean_q5_mmr24m year if totalquintile==1) ///
 			   (line mean_q5_mmr24m year if totalquintile==2) ///
 			   (line mean_q5_mmr24m year if totalquintile==3) ///
@@ -21,20 +19,9 @@ use "https://raw.githubusercontent.com/jubo-git/Project/main/data_clean/Lockdown
 			   xline(2020.9) xlabel(2014(1)2025) ///
 			   title("MMR1 at 24 months rates by lockdown exposure quintile")
 
-	* Quartile
-		
-
-		twoway (line mean_q4_mmr24m year if totalquartile==1) ///
-			   (line mean_q4_mmr24m year if totalquartile==2) ///
-			   (line mean_q4_mmr24m year if totalquartile==3) ///
-			   (line mean_q4_mmr24m year if totalquartile==4), ///
-			   legend(label(1 "Q1 (Lowest)") label(2 "Q2") label(3 "Q3") label(4 "Q4 (Highest)")) ///
-			   xline(2020.9) xlabel(2014(1)2025) ///
-			   title("MMR1 at 24 months rates by lockdown exposure quartile")
-			   
 	**Numerical Comparison (Quartile more approriate)	
 	xtreg mmr1_24m i.totalquintile##c.year if year < 2020, fe
-	xtreg mmr1_24m i.totalquartile##c.year if year < 2020, fe
+
 	
 *mmr1_5y
 	*quintile
@@ -48,21 +35,10 @@ use "https://raw.githubusercontent.com/jubo-git/Project/main/data_clean/Lockdown
 		   legend(label(1 "Q1 (Lowest)") label(2 "Q2") label(3 "Q3") label(4 "Q4") label(5 "Q5 (Highest)")) ///
 		   xline(2020.9) xlabel(2014(1)2025) ///
 		   title("MMR1 at 5 years rates by lockdown exposure quintile")
-
-	*quartile
-
-		twoway (line mean_q4_mmr1_5y year if totalquartile==1) ///
-			   (line mean_q4_mmr1_5y year if totalquartile==2) ///
-			   (line mean_q4_mmr1_5y year if totalquartile==3) ///
-			   (line mean_q4_mmr1_5y year if totalquartile==4), ///
-			   legend(label(1 "Q1 (Lowest)") label(2 "Q2") label(3 "Q3") label(4 "Q4 (Highest)")) ///
-			   xline(2020.9) xlabel(2014(1)2025) ///
-			   title("MMR1 at 5 years rates by lockdown exposure quartile")
 			   
 	**Numerical Comparison (Quintile more approriate)
 	xtreg mmr1_5y i.totalquintile##c.year if year < 2020, fe
-	xtreg mmr1_5y i.totalquartile##c.year if year < 2020, fe
-	
+
 *mmr2_5y
 	*quintile 
 		
@@ -75,18 +51,7 @@ use "https://raw.githubusercontent.com/jubo-git/Project/main/data_clean/Lockdown
 		   xline(2020.9) xlabel(2014(1)2025) ///
 		   title("MMR2 at 5 years rates by lockdown exposure quintile")
 
-	*quartile
 
-
-		twoway (line mean_q4_mmr2_5y year if totalquartile==1) ///
-			   (line mean_q4_mmr2_5y year if totalquartile==2) ///
-			   (line mean_q4_mmr2_5y year if totalquartile==3) ///
-			   (line mean_q4_mmr2_5y year if totalquartile==4), ///
-			   legend(label(1 "Q1 (Lowest)") label(2 "Q2") label(3 "Q3") label(4 "Q4 (Highest)")) ///
-			   xline(2020.9) xlabel(2014(1)2025) ///
-			   title("MMR2 at 5 years rates by lockdown exposure quartile")
-
-	xtreg mmr2_5y i.totalquartile##c.year if year < 2020, fe
 	xtreg mmr2_5y i.totaltertile##c.year if year < 2020, fe
 			   
 

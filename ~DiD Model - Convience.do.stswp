@@ -1,6 +1,8 @@
 **#0 GitHub Setup
 use "https://raw.githubusercontent.com/jubo-git/Project/main/data_clean/Lockdown_MMR_NOMIS.dta"
 
+**#Parallel Trends
+
 **#1 Convenience: MMR1 at 24 months
 
 	**Model 1.1: Continous Dose
