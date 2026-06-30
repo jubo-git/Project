@@ -1,4 +1,3 @@
-clear all
 macro drop _all
 
 
@@ -9,141 +8,129 @@ copy "`repo'/Combining%20MMR%20and%20Lockdown%20Score.xlsx" "temp_main.xlsx", re
 import excel "temp_main.xlsx", sheet("Raw Lockdown Data") firstrow clear
 
 ** Tidying (generic and making variables more streamlined)
-	* maintain english data only 
-	drop Scotlandtier
-	drop if Country !="England"
+* maintain english data only 
+drop Scotlandtier
+drop if Country !="England"
 
-	rename *, lower
-	rename englandtiera tiera
-	rename englandtierb tierb
-	rename noindoormixing noindoormix
-	rename nooutdoormixing nooutmix
+rename *, lower
+rename englandtiera tiera
+rename englandtierb tierb
+rename noindoormixing noindoormix
+rename nooutdoormixing nooutmix
 
-	* create a date function (to allow for averages later)
-	gen date = mdy(month,dayofmonth,2020)
-	format date %td
-	label variable date "Date of Restriction"
-	drop month dayofmonth 
-	
-	* need to rename LOCKDOWN data E10000002 to E06000060 as code changed in 2021
-	replace lacode = "E06000060" if lacode == "E10000002"
-	replace lacode = "E06000065" if lacode == "E10000023"
-	replace lacode = "E06000066" if lacode == "E10000027"
-	
+* create a date function (to allow for averages later)
+gen date = mdy(month,dayofmonth,2020)
+format date %td
+label variable date "Date of Restriction"
+drop month dayofmonth 
+* need to rename LOCKDOWN data E10000002 to E06000060 as code changed in 2021
+replace lacode = "E06000060" if lacode == "E10000002"
+replace lacode = "E06000065" if lacode == "E10000023"
+replace lacode = "E06000066" if lacode == "E10000027"
 ** COMBINING LOCAL AUTHORITY DATA
-	replace lacode = "" if inlist(lacode, "E11000001", "E11000002", "E11000003")
-	replace lacode = "" if inlist(lacode, "E11000005", "E11000006", "E11000007")
-	replace lacode = "" if inlist(lacode, "E13000001", "E13000002")
-	gen onscode = countycode if lacode == ""
-	replace onscode = lacode if lacode != ""
-	duplicates drop onscode date, force
-	
-	* Renaming onscode (after sense checked in excel)
-	replace laname = "Buckinghamshire" if onscode == "E06000060"
-	replace laname = "Cambridgeshire" if onscode == "E10000003"
-	replace laname = "Cumbria" if onscode == "E10000006"
-	replace laname = "Derbyshire" if onscode == "E10000007"
-	replace laname = "Devon" if onscode == "E10000008"
-	replace laname = "East Sussex" if onscode == "E10000011"
-	replace laname = "Essex" if onscode == "E10000012"
-	replace laname = "Gloucestershire" if onscode == "E10000013"
-	replace laname = "Hampshire" if onscode == "E10000014"
-	replace laname = "Hertfordshire" if onscode == "E10000015"
-	replace laname = "Kent" if onscode == "E10000016"
-	replace laname = "Lancashire" if onscode == "E10000017"
-	replace laname = "Leicestershire" if onscode == "E10000018"
-	replace laname = "Lincolnshire" if onscode == "E10000019"
-	replace laname = "Norfolk" if onscode == "E10000020"
-	replace laname = "North Yorkshire" if onscode == "E10000023"
-	replace laname = "Northamptonshire" if onscode == "E10000021"
-	replace laname = "Nottinghamshire" if onscode == "E10000024"
-	replace laname = "Oxfordshire" if onscode == "E10000025"
-	replace laname = "Somerset" if onscode == "E10000027"
-	replace laname = "Staffordshire" if onscode == "E10000028"
-	replace laname = "Suffolk" if onscode == "E10000029"
-	replace laname = "Surrey" if onscode == "E10000030"
-	replace laname = "Warwickshire" if onscode == "E10000031"
-	replace laname = "West Sussex" if onscode == "E10000032"
-	replace laname = "Worcestershire" if onscode == "E10000034"
-	
+replace lacode = "" if inlist(lacode, "E11000001", "E11000002", "E11000003")
+replace lacode = "" if inlist(lacode, "E11000005", "E11000006", "E11000007")
+replace lacode = "" if inlist(lacode, "E13000001", "E13000002")
+gen onscode = countycode if lacode == ""
+replace onscode = lacode if lacode != ""
+duplicates drop onscode date, force
+* Renaming onscode (after sense checked in excel)
+replace laname = "Buckinghamshire" if onscode == "E06000060"
+replace laname = "Cambridgeshire" if onscode == "E10000003"
+replace laname = "Cumbria" if onscode == "E10000006"
+replace laname = "Derbyshire" if onscode == "E10000007"
+replace laname = "Devon" if onscode == "E10000008"
+replace laname = "East Sussex" if onscode == "E10000011"
+replace laname = "Essex" if onscode == "E10000012"
+replace laname = "Gloucestershire" if onscode == "E10000013"
+replace laname = "Hampshire" if onscode == "E10000014"
+replace laname = "Hertfordshire" if onscode == "E10000015"
+replace laname = "Kent" if onscode == "E10000016"
+replace laname = "Lancashire" if onscode == "E10000017"
+replace laname = "Leicestershire" if onscode == "E10000018"
+replace laname = "Lincolnshire" if onscode == "E10000019"
+replace laname = "Norfolk" if onscode == "E10000020"
+replace laname = "North Yorkshire" if onscode == "E10000023"
+replace laname = "Northamptonshire" if onscode == "E10000021"
+replace laname = "Nottinghamshire" if onscode == "E10000024"
+replace laname = "Oxfordshire" if onscode == "E10000025"
+replace laname = "Somerset" if onscode == "E10000027"
+replace laname = "Staffordshire" if onscode == "E10000028"
+replace laname = "Suffolk" if onscode == "E10000029"
+replace laname = "Surrey" if onscode == "E10000030"
+replace laname = "Warwickshire" if onscode == "E10000031"
+replace laname = "West Sussex" if onscode == "E10000032"
+replace laname = "Worcestershire" if onscode == "E10000034"
 **# Diagnostic before defining variables 
 
-	**Social Distancing 
-		bysort date: egen sd_socialdistancing = sd(socialdistancing)
-		tab sd_socialdistancing
-		bysort onscode: egen total_days_sociald = total(socialdistancing)
-		tab total_days_sociald
+**Social Distancing 
+bysort date: egen sd_socialdistancing = sd(socialdistancing)
+tab sd_socialdistancing
+bysort onscode: egen total_days_sociald = total(socialdistancing)
+tab total_days_sociald
 
-	**Primary 
-		bysort date: egen sd_primaryclosed = sd(primaryclosed)
-		tab sd_primaryclosed
-		bysort onscode: egen total_days_closed = total(primaryclosed)
-		tab total_days_closed
-	
-	**Secondary School Closures
-		bysort date: egen sd_secondaryclosed = sd(secondaryclosed)
-		tab sd_secondaryclosed
-		bysort onscode: egen total_days_secondary = total(secondaryclosed)
-		tab total_days_secondary
+**Primary 
+bysort date: egen sd_primaryclosed = sd(primaryclosed)
+tab sd_primaryclosed
+bysort onscode: egen total_days_closed = total(primaryclosed)
+tab total_days_closed
+**Secondary School Closures
+bysort date: egen sd_secondaryclosed = sd(secondaryclosed)
+tab sd_secondaryclosed
+bysort onscode: egen total_days_secondary = total(secondaryclosed)
+tab total_days_secondary
 
-	**Hospitality Shutdown
-		bysort date: egen sd_hospshut = sd(hospitalityshut)
-		tab sd_hospshut
-		bysort onscode: egen total_days_hosp = total(hospitalityshut)
-		tab total_days_hosp
+**Hospitality Shutdown
+bysort date: egen sd_hospshut = sd(hospitalityshut)
+tab sd_hospshut
+bysort onscode: egen total_days_hosp = total(hospitalityshut)
+tab total_days_hosp
 
-	**Retail Shutdown
-		bysort date: egen sd_retailshut = sd(retailshut)
-		tab sd_retailshut
-		bysort onscode: egen total_days_retail = total(retailshut)
-		tab total_days_retail
+**Retail Shutdown
+bysort date: egen sd_retailshut = sd(retailshut)
+tab sd_retailshut
+bysort onscode: egen total_days_retail = total(retailshut)
+tab total_days_retail
 
-	**Tier A 
-		bysort date: egen sd_tiera = sd(tiera)
-		tab sd_tiera
-	
-	**Tier B 
-		bysort date: egen sd_tierb = sd(tierb)
-		tab sd_tierb
-	
-	**Make a London-free dataset for comparison
-	tab region 
-	drop if region =="London"
-	
-	
-	//Reveals that social distancing, primary, secondary hospitality had very little national variation. Just retail shutdown, tier a and tier b. Not using tiers as a weighting factor as it disguses national trends. Not possible or neccessary to build a total score 
+**Tier A 
+bysort date: egen sd_tiera = sd(tiera)
+tab sd_tiera
+**Tier B 
+bysort date: egen sd_tierb = sd(tierb)
+tab sd_tierb
+**Make a London-free dataset for comparison
+tab region 
+drop if region =="London"
+//Reveals that social distancing, primary, secondary hospitality had very little national variation. Just retail shutdown, tier a and tier b. Not using tiers as a weighting factor as it disguses national trends. Not possible or neccessary to build a total score 
 
-	collapse (sum) total_retail = retailshut ///
-		 (sum) tierdays_a = tiera ///
-		 (sum) tierdays_b = tierb, by(onscode laname regioncode)
-		  
+collapse (sum) total_retail = retailshut ///
+(sum) tierdays_a = tiera ///
+(sum) tierdays_b = tierb, by(onscode laname regioncode)
+  
 
 **#Quartile Binning (All Scores)
 
 
-	**Confidence: Tier A Severity (local infection-rate-based tiers)
-		xtile tieraquartile = tierdays_a, nquantiles(4)
+**Confidence: Tier A Severity (local infection-rate-based tiers)
+xtile tieraquintile = tierdays_a, nquantiles(5)
 
-	**Confidence: Tier B Severity (Plan A/B measures)
-		xtile tierbquartile = tierdays_b, nquantiles(4)
-		//Tier A and Tier B kept separate rather than combined: they represent distinct policy regimes from different phases of the pandemic
-		
+**Confidence: Tier B Severity (Plan A/B measures)
+xtile tierbquintile = tierdays_b, nquantiles(5)
+//Tier A and Tier B kept separate rather than combined: they represent distinct policy regimes from different phases of the pandemic
 
-	**Complacency: Social Mixing Restrictions
-		xtile complacency_quartile = total_retail, nquantiles(4)
-		//Hospitality dropped: diagnostic showed near-zero cross-LA variation
-		//Retail retained as sole Complacency proxy - confirmed genuine local variation.
+**Complacency: Social Mixing Restrictions
+xtile complacency_quintile = total_retail, nquantiles(5)
+//Hospitality dropped: diagnostic showed near-zero cross-LA variation
+//Retail retained as sole Complacency proxy - confirmed genuine local variation.
 
-	//Note: Convenience (primary/secondary school closures) dropped entirely. Diagnostic showed 99.34% of LAs identical on both total_days_closed (72 days) and total_days_secondary (86 days) - closures were applied near-nationally
-	
+//Note: Convenience (primary/secondary school closures) dropped entirely. Diagnostic showed 99.34% of LAs identical on both total_days_closed (72 days) and total_days_secondary (86 days) - closures were applied near-nationally
 
-	//Note these are time-invariant
-	
-	* Drop specific areas not reflected in Vaccine Data 
-	drop if inlist(onscode, "E06000017", "E06000053", "E09000001", "E07000188")
-	sort laname
+//Note these are time-invariant
+* Drop specific areas not reflected in Vaccine Data 
+drop if inlist(onscode, "E06000017", "E06000053", "E09000001", "E07000188")
+sort laname
 
-	save "data_clean/Lockdown Dataset NO LONDON", replace
+save "data_clean/Lockdown Dataset NO LONDON", replace
 
 
 **#2 - Vaccine Processing 
@@ -156,19 +143,18 @@ label variable mmr2_5y "MMR2 % of Children at 5 years"
 label variable mmr1_5y "MMR1 % of Children at 5 years"
 label variable mmr1_24m "MMR1 % of Children at 2 years"
 
-	* Backdating ONS codes for boundary changes consistency
-	drop if inlist(onscode, "E06000029", "E06000061", "E06000062") 
-	replace onscode = "E06000058" if onscode == "E06000028" 
-	replace localauthority = "Bournemouth, Christchurch and Poole" if onscode == "E06000058"
-	replace localauthority = "Westminster" if onscode == "E09000033" 
-	replace localauthority = "Bristol" if onscode == "E06000023" 
-	replace onscode = "E06000060" if onscode == "E10000002" 
-	replace localauthority = "Herefordshire" if onscode == "E06000019" 
-	replace onscode = "E06000059" if onscode == "E10000009" 
-	replace localauthority = "Kingston upon Hull" if onscode == "E06000010" 	
-	replace onscode = "E06000065" if onscode == "E10000023" 
-	replace onscode = "E06000066" if onscode == "E10000027" 
-	
+* Backdating ONS codes for boundary changes consistency
+drop if inlist(onscode, "E06000029", "E06000061", "E06000062") 
+replace onscode = "E06000058" if onscode == "E06000028" 
+replace localauthority = "Bournemouth, Christchurch and Poole" if onscode == "E06000058"
+replace localauthority = "Westminster" if onscode == "E09000033" 
+replace localauthority = "Bristol" if onscode == "E06000023" 
+replace onscode = "E06000060" if onscode == "E10000002" 
+replace localauthority = "Herefordshire" if onscode == "E06000019" 
+replace onscode = "E06000059" if onscode == "E10000009" 
+replace localauthority = "Kingston upon Hull" if onscode == "E06000010"
+replace onscode = "E06000065" if onscode == "E10000023" 
+replace onscode = "E06000066" if onscode == "E10000027" 
 save "data_clean/MMR Dataset NO LONDON.dta", replace
 capture erase "temp_main.xlsx"
    
@@ -225,22 +211,21 @@ encode onscode, gen(ons_id)
 gen post = (year >= 2020)
 xtset ons_id year
 
-**#Parallel Trends Means by Quartile
+**#Parallel Trends Means by Quintile
 
 **#Parallel Trends Means
 
-bysort tieraquartile year: egen mean_tiera_mmr24m = mean(mmr1_24m)
-bysort tieraquartile year: egen mean_tiera_mmr1_5y = mean(mmr1_5y)
-bysort tieraquartile year: egen mean_tiera_mmr2_5y = mean(mmr2_5y)
+bysort tieraquintile year: egen mean_tiera_mmr24m = mean(mmr1_24m)
+bysort tieraquintile year: egen mean_tiera_mmr1_5y = mean(mmr1_5y)
+bysort tieraquintile year: egen mean_tiera_mmr2_5y = mean(mmr2_5y)
 
-bysort tierbquartile year: egen mean_tierb_mmr24m = mean(mmr1_24m)
-bysort tierbquartile year: egen mean_tierb_mmr1_5y = mean(mmr1_5y)
-bysort tierbquartile year: egen mean_tierb_mmr2_5y = mean(mmr2_5y)
+bysort tierbquintile year: egen mean_tierb_mmr24m = mean(mmr1_24m)
+bysort tierbquintile year: egen mean_tierb_mmr1_5y = mean(mmr1_5y)
+bysort tierbquintile year: egen mean_tierb_mmr2_5y = mean(mmr2_5y)
 
-bysort complacency_quartile year: egen mean_complacency_mmr24m = mean(mmr1_24m)
-bysort complacency_quartile year: egen mean_complacency_mmr1_5y = mean(mmr1_5y)
-bysort complacency_quartile year: egen mean_complacency_mmr2_5y = mean(mmr2_5y)
-		
+bysort complacency_quintile year: egen mean_complacency_mmr24m = mean(mmr1_24m)
+bysort complacency_quintile year: egen mean_complacency_mmr1_5y = mean(mmr1_5y)
+bysort complacency_quintile year: egen mean_complacency_mmr2_5y = mean(mmr2_5y)
 * Save final integrated dataset into clean data subfolder
 save "data_clean/Lockdown_MMR_NOMIS_NO_LONDON.dta", replace
 
@@ -248,4 +233,4 @@ save "data_clean/Lockdown_MMR_NOMIS_NO_LONDON.dta", replace
 
 !git add .
 !git commit -m "Mantain Regional Data (for London Comparison)"
-!git push -u origin main
+!git push -u origin main 

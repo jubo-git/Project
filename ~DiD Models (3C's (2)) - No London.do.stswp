@@ -1,4 +1,5 @@
 **#0 GitHub Setup
+clear
 use "https://raw.githubusercontent.com/jubo-git/Project/main/data_clean/Lockdown_MMR_NOMIS_NO_LONDON.dta"
 
 
@@ -28,8 +29,7 @@ use "https://raw.githubusercontent.com/jubo-git/Project/main/data_clean/Lockdown
 	regress mmr1_24m i.tieraquintile##post blackblackbritishblackwels otherethnicgroup householdisdeprivedinonedim householdisdeprivedinthreed householdisdeprivedinfourdi christian buddhist hindu jewish muslim sikh otherreligion, vce(cluster ons_id)
 	estat vif
 
-	**Test model: I think London (most of Tier 3 is skewing the results). Will control for region 
-		xtreg mmr1_24m i.tieraquintile##post, fe vce(cluster onscode)
+
 	
 **#2 Confidence - Tier A: MMR1 at 5 years
 
