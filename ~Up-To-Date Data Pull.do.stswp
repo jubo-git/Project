@@ -243,5 +243,5 @@ save "data_clean/Lockdown_MMR_NOMIS.dta", replace
 ** 3. Save and Push Everything to GitHub (Now safely at the bottom)
 
 !git add .
-!git commit -m "Update of Model Choice: Diagnostic Test showed no variation. Change of post-treatment"
+!git commit -m "Mantain Regional Data (for London Comparison)"
 !git push -u origin main
