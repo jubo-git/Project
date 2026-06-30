@@ -2,7 +2,6 @@ clear all
 macro drop _all
 
 
-
 **#1 Processing Lockdown Data to be Comp. with Vaccine Data
 ** import ALL raw lockdown data from the public web repository
 local repo "https://raw.githubusercontent.com/jubo-git/Project/main/data_raw"
@@ -69,46 +68,75 @@ import excel "temp_main.xlsx", sheet("Raw Lockdown Data") firstrow clear
 	replace laname = "Warwickshire" if onscode == "E10000031"
 	replace laname = "West Sussex" if onscode == "E10000032"
 	replace laname = "Worcestershire" if onscode == "E10000034"
-		
-	gen highest_tier = max(tiera, tierb)
-	gen w_hospshut   = hospitalityshut * highest_tier
-	gen w_retail      = retailshut      * highest_tier
-	gen w_primary     = primaryclosed   * highest_tier
-	gen w_secondary  = secondaryclosed * highest_tier
-		
-	collapse (sum) sumsociald = socialdistancing ///
-		 (sum) weighted_hosp = w_hospshut  ///
-		 (sum) weighted_retail = w_retail  ///
-		 (sum) weighted_primary = w_primary ///
-		 (sum) weighted_secondary = w_secondary ///
-		 (max) maxtiera = tiera ///
-		 (max) maxtierb = tierb, by(onscode laname)
-		  
-	gen weightedtotalscore = weighted_hosp + weighted_retail + weighted_primary + weighted_secondary
 	
+**# Diagnostic before defining variables 
+
+	**Social Distancing 
+		bysort date: egen sd_socialdistancing = sd(socialdistancing)
+		tab sd_socialdistancing
+		bysort onscode: egen total_days_sociald = total(socialdistancing)
+		tab total_days_sociald
+
+	**Primary 
+		bysort date: egen sd_primaryclosed = sd(primaryclosed)
+		tab sd_primaryclosed
+		bysort onscode: egen total_days_closed = total(primaryclosed)
+		tab total_days_closed
+	
+	**Secondary School Closures
+		bysort date: egen sd_secondaryclosed = sd(secondaryclosed)
+		tab sd_secondaryclosed
+		bysort onscode: egen total_days_secondary = total(secondaryclosed)
+		tab total_days_secondary
+
+	**Hospitality Shutdown
+		bysort date: egen sd_hospshut = sd(hospitalityshut)
+		tab sd_hospshut
+		bysort onscode: egen total_days_hosp = total(hospitalityshut)
+		tab total_days_hosp
+
+	**Retail Shutdown
+		bysort date: egen sd_retailshut = sd(retailshut)
+		tab sd_retailshut
+		bysort onscode: egen total_days_retail = total(retailshut)
+		tab total_days_retail
+
+	**Tier A 
+		bysort date: egen sd_tiera = sd(tiera)
+		tab sd_tiera
+	
+	**Tier B 
+		bysort date: egen sd_tierb = sd(tierb)
+		tab sd_tierb
+	
+	//Reveals that social distancing, primary, secondary hospitality had very little national variation. Just retail shutdown, tier a and tier b. Not using tiers as a weighting factor as it disguses national trends. Not possible or neccessary to build a total score 
+	
+
+	collapse (sum) total_retail = retailshut ///
+		 (sum) tierdays_a = tiera ///
+		 (sum) tierdays_b = tierb, by(onscode laname)
+		  
+
 **#Quartile Binning (All Scores)
 
-	**Total Weighted Lockdown Score
-		xtile totalquintile = weightedtotalscore, nquantiles(5)
 
-	**Convenience: School Closures
-		xtile primaryquintile   = weighted_primary,   nquantiles(5)
-		xtile secondaryquintile = weighted_secondary, nquantiles(5)
-		//Kept disaggregated rather than combined: MMR outcomes are for under-5s,
+	**Confidence: Tier A Severity (local infection-rate-based tiers)
+		xtile tieraquintile = tierdays_a, nquantiles(5)
+
+	**Confidence: Tier B Severity (Plan A/B measures)
+		xtile tierbquintile = tierdays_b, nquantiles(5)
+		//Tier A and Tier B kept separate rather than combined: they represent distinct policy regimes from different phases of the pandemic
 		
-	**Confidence: Tier Severity
-		gen confidence_score = maxtiera + maxtierb
-		xtile confidence_quintile = confidence_score, nquantiles(5)
-
-		//Already in a ordinal scale with a max of 3 or 4. Still bin for consistency as combined socre could reach 7 
 
 	**Complacency: Social Mixing Restrictions
-		gen complacency_score = weighted_hosp + weighted_retail
-		xtile complacency_quintile = complacency_score, nquantiles(5)
+		xtile complacency_quintile = total_retail, nquantiles(5)
+		//Hospitality dropped: diagnostic showed near-zero cross-LA variation
+		//Retail retained as sole Complacency proxy - confirmed genuine local variation.
+
+	//Note: Convenience (primary/secondary school closures) dropped entirely. Diagnostic showed 99.34% of LAs identical on both total_days_closed (72 days) and total_days_secondary (86 days) - closures were applied near-nationally
+	
 
 	//Note these are time-invariant
-
-	
 	
 	* Drop specific areas not reflected in Vaccine Data 
 	drop if inlist(onscode, "E06000017", "E06000053", "E09000001", "E07000188")
@@ -173,7 +201,6 @@ drop if substr(onscode, 1, 1) == "W"
 
 gen deprivation_score = (1*householdisdeprivedinonedim) + (2*householdisdeprivedintwodim) + (3*householdisdeprivedinthreed) + (4*householdisdeprivedinfourdi)
 
-
 save "data_clean/Nomis.dta", replace
 
 
@@ -181,7 +208,7 @@ save "data_clean/Nomis.dta", replace
 clear
 use "data_clean/MMR Dataset COMP.dta"
 merge m:1 onscode using "data_clean/Lockdown Dataset COMP.dta", nogenerate
-drop laname code sumsociald 
+drop laname code 
 
 * Save intermediate file to clean data subfolder
 save "data_clean/Lockdown_MMR_Data.dta", replace
@@ -199,31 +226,23 @@ gen post = (year >= 2020)
 
 **#Parallel Trends Means by Quintile
 
-	bysort totalquintile year:        egen mean_q5_mmr24m          = mean(mmr1_24m)
-	bysort totalquintile year:        egen mean_q5_mmr1_5y         = mean(mmr1_5y)
-	bysort totalquintile year:        egen mean_q5_mmr2_5y         = mean(mmr2_5y)
+**#Parallel Trends Means
 
-	bysort primaryquintile year:      egen mean_primary_mmr24m     = mean(mmr1_24m)
-	bysort primaryquintile year:      egen mean_primary_mmr1_5y    = mean(mmr1_5y)
-	bysort primaryquintile year:      egen mean_primary_mmr2_5y    = mean(mmr2_5y)
-
-	bysort secondaryquintile year:    egen mean_secondary_mmr24m   = mean(mmr1_24m)
-	bysort secondaryquintile year:    egen mean_secondary_mmr1_5y  = mean(mmr1_5y)
-	bysort secondaryquintile year:    egen mean_secondary_mmr2_5y  = mean(mmr2_5y)
-
-	bysort confidence_quintile year:  egen mean_confidence_mmr24m  = mean(mmr1_24m)
-	bysort confidence_quintile year:  egen mean_confidence_mmr1_5y = mean(mmr1_5y)
-	bysort confidence_quintile year:  egen mean_confidence_mmr2_5y = mean(mmr2_5y)
-
-	bysort complacency_quintile year: egen mean_complacency_mmr24m  = mean(mmr1_24m)
-	bysort complacency_quintile year: egen mean_complacency_mmr1_5y = mean(mmr1_5y)
-	bysort complacency_quintile year: egen mean_complacency_mmr2_5y = mean(mmr2_5y)
-	
+bysort tieraquintile year: egen mean_tiera_mmr24m = mean(mmr1_24m)
+bysort tieraquintile year: egen mean_tiera_mmr1_5y = mean(mmr1_5y)
+bysort tieraquintile year: egen mean_tiera_mmr2_5y = mean(mmr2_5y)
+bysort tierbquintile year: egen mean_tierb_mmr24m = mean(mmr1_24m)
+bysort tierbquintile year: egen mean_tierb_mmr1_5y = mean(mmr1_5y)
+bysort tierbquintile year: egen mean_tierb_mmr2_5y = mean(mmr2_5y)
+bysort complacency_quintile year: egen mean_complacency_mmr24m = mean(mmr1_24m)
+bysort complacency_quintile year: egen mean_complacency_mmr1_5y = mean(mmr1_5y)
+bysort complacency_quintile year: egen mean_complacency_mmr2_5y = mean(mmr2_5y)
+		
 * Save final integrated dataset into clean data subfolder
 save "data_clean/Lockdown_MMR_NOMIS.dta", replace
 
 ** 3. Save and Push Everything to GitHub (Now safely at the bottom)
 
 !git add .
-!git commit -m "Update of 3C's: Just Quartiles and Embedding Means and ONS-ID (1.1)"
+!git commit -m "Update of Model Choice: Diagnostic Test showed no variation. Change of post-treatment"
 !git push -u origin main
