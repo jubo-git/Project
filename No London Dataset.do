@@ -106,12 +106,8 @@ import excel "temp_main.xlsx", sheet("Raw Lockdown Data") firstrow clear
 		bysort date: egen sd_tierb = sd(tierb)
 		tab sd_tierb
 	
-	**Make a London-free dataset for comparison
-	drop if Country !="England"
-	
-	
+
 	//Reveals that social distancing, primary, secondary hospitality had very little national variation. Just retail shutdown, tier a and tier b. Not using tiers as a weighting factor as it disguses national trends. Not possible or neccessary to build a total score 
-	tab region 
 	
 
 	collapse (sum) total_retail = retailshut ///
