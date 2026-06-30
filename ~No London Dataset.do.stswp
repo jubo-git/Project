@@ -215,17 +215,7 @@ xtset ons_id year
 
 **#Parallel Trends Means
 
-bysort tieraquintile year: egen mean_tiera_mmr24m = mean(mmr1_24m)
-bysort tieraquintile year: egen mean_tiera_mmr1_5y = mean(mmr1_5y)
-bysort tieraquintile year: egen mean_tiera_mmr2_5y = mean(mmr2_5y)
 
-bysort tierbquintile year: egen mean_tierb_mmr24m = mean(mmr1_24m)
-bysort tierbquintile year: egen mean_tierb_mmr1_5y = mean(mmr1_5y)
-bysort tierbquintile year: egen mean_tierb_mmr2_5y = mean(mmr2_5y)
-
-bysort complacency_quintile year: egen mean_complacency_mmr24m = mean(mmr1_24m)
-bysort complacency_quintile year: egen mean_complacency_mmr1_5y = mean(mmr1_5y)
-bysort complacency_quintile year: egen mean_complacency_mmr2_5y = mean(mmr2_5y)
 
 * Save final integrated dataset into clean data subfolder
 save "data_clean/Lockdown_MMR_NOMIS_NO_LONDON.dta", replace

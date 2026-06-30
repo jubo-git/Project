@@ -16,6 +16,7 @@ use "https://raw.githubusercontent.com/jubo-git/Project/main/data_clean/Lockdown
 			   legend(label(1 "Q1 (Lowest)") label(2 "Q2") label(3 "Q3") label(4 "Q4") label(5 "Q5 (Highest)")) ///
 			   xline(2020.9) xlabel(2014(1)2025) ///
 			   title("MMR1 at 24 months rates by Tier A Severity")
+		xtreg mmr1_24m i.tieraquintile##c.year if year < 2020, fe
 
 	* Tier B Quintile
 		bysort tierbquintile year: egen mean_tierb_mmr24m = mean(mmr1_24m)
@@ -27,6 +28,7 @@ use "https://raw.githubusercontent.com/jubo-git/Project/main/data_clean/Lockdown
 			   legend(label(1 "Q1 (Lowest)") label(2 "Q2") label(3 "Q3") label(4 "Q4") label(5 "Q5 (Highest)")) ///
 			   xline(2020.9) xlabel(2014(1)2025) ///
 			   title("MMR1 at 24 months rates by Tier B Severity")
+		xtreg mmr1_24m i.tierbquintile##c.year if year < 2020, fe
 
 	* Complacency Quintile
 		bysort complacency_quintile year: egen mean_complacency_mmr24m = mean(mmr1_24m)
@@ -38,6 +40,7 @@ use "https://raw.githubusercontent.com/jubo-git/Project/main/data_clean/Lockdown
 			   legend(label(1 "Q1 (Lowest)") label(2 "Q2") label(3 "Q3") label(4 "Q4") label(5 "Q5 (Highest)")) ///
 			   xline(2020.9) xlabel(2014(1)2025) ///
 			   title("MMR1 at 24 months rates by Complacency")
+		xtreg mmr1_24m i.complacency_quintile##c.year if year < 2020, fe
 
 
 *mmr1_5y
@@ -51,6 +54,7 @@ use "https://raw.githubusercontent.com/jubo-git/Project/main/data_clean/Lockdown
 			   legend(label(1 "Q1 (Lowest)") label(2 "Q2") label(3 "Q3") label(4 "Q4") label(5 "Q5 (Highest)")) ///
 			   xline(2020.9) xlabel(2014(1)2025) ///
 			   title("MMR1 at 5 years rates by Tier A Severity")
+		xtreg mmr1_5y i.tieraquintile##c.year if year < 2020, fe
 
 	* Tier B Quintile
 		bysort tierbquintile year: egen mean_tierb_mmr1_5y = mean(mmr1_5y)
@@ -62,6 +66,7 @@ use "https://raw.githubusercontent.com/jubo-git/Project/main/data_clean/Lockdown
 			   legend(label(1 "Q1 (Lowest)") label(2 "Q2") label(3 "Q3") label(4 "Q4") label(5 "Q5 (Highest)")) ///
 			   xline(2020.9) xlabel(2014(1)2025) ///
 			   title("MMR1 at 5 years rates by Tier B Severity")
+		xtreg mmr1_5y i.tierbquintile##c.year if year < 2020, fe
 
 	* Complacency Quintile
 		bysort complacency_quintile year: egen mean_complacency_mmr1_5y = mean(mmr1_5y)
@@ -73,6 +78,7 @@ use "https://raw.githubusercontent.com/jubo-git/Project/main/data_clean/Lockdown
 			   legend(label(1 "Q1 (Lowest)") label(2 "Q2") label(3 "Q3") label(4 "Q4") label(5 "Q5 (Highest)")) ///
 			   xline(2020.9) xlabel(2014(1)2025) ///
 			   title("MMR1 at 5 years rates by Complacency")
+		xtreg mmr1_5y i.complacency_quintile##c.year if year < 2020, fe
 
 
 *mmr2_5y
@@ -86,6 +92,7 @@ use "https://raw.githubusercontent.com/jubo-git/Project/main/data_clean/Lockdown
 			   legend(label(1 "Q1 (Lowest)") label(2 "Q2") label(3 "Q3") label(4 "Q4") label(5 "Q5 (Highest)")) ///
 			   xline(2020.9) xlabel(2014(1)2025) ///
 			   title("MMR2 at 5 years rates by Tier A Severity")
+		xtreg mmr2_5y i.tieraquintile##c.year if year < 2020, fe
 
 	* Tier B Quintile
 		bysort tierbquintile year: egen mean_tierb_mmr2_5y = mean(mmr2_5y)
@@ -97,6 +104,7 @@ use "https://raw.githubusercontent.com/jubo-git/Project/main/data_clean/Lockdown
 			   legend(label(1 "Q1 (Lowest)") label(2 "Q2") label(3 "Q3") label(4 "Q4") label(5 "Q5 (Highest)")) ///
 			   xline(2020.9) xlabel(2014(1)2025) ///
 			   title("MMR2 at 5 years rates by Tier B Severity")
+		xtreg mmr2_5y i.tierbquintile##c.year if year < 2020, fe
 
 	* Complacency Quintile
 		bysort complacency_quintile year: egen mean_complacency_mmr2_5y = mean(mmr2_5y)
@@ -108,9 +116,10 @@ use "https://raw.githubusercontent.com/jubo-git/Project/main/data_clean/Lockdown
 			   legend(label(1 "Q1 (Lowest)") label(2 "Q2") label(3 "Q3") label(4 "Q4") label(5 "Q5 (Highest)")) ///
 			   xline(2020.9) xlabel(2014(1)2025) ///
 			   title("MMR2 at 5 years rates by Complacency")
+		xtreg mmr2_5y i.complacency_quintile##c.year if year < 2020, fe
 
 
 //Saving
 !git add .
-!git commit -m "Parallel Trends Do-File (for 3C's)"
+!git commit -m "Parallel Trends Do-File"
 !git push -u origin main
