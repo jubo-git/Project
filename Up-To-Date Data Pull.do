@@ -19,9 +19,6 @@ import excel "temp_main.xlsx", sheet("Raw Lockdown Data") firstrow clear
 	rename noindoormixing noindoormix
 	rename nooutdoormixing nooutmix
 
-	* National and Regional Data: Not required as the detail is held at the county and local authority level 
-	drop country region regioncode
-	
 	* create a date function (to allow for averages later)
 	gen date = mdy(month,dayofmonth,2020)
 	format date %td
@@ -109,12 +106,13 @@ import excel "temp_main.xlsx", sheet("Raw Lockdown Data") firstrow clear
 		bysort date: egen sd_tierb = sd(tierb)
 		tab sd_tierb
 	
+
 	//Reveals that social distancing, primary, secondary hospitality had very little national variation. Just retail shutdown, tier a and tier b. Not using tiers as a weighting factor as it disguses national trends. Not possible or neccessary to build a total score 
 	
 
 	collapse (sum) total_retail = retailshut ///
 		 (sum) tierdays_a = tiera ///
-		 (sum) tierdays_b = tierb, by(onscode laname)
+		 (sum) tierdays_b = tierb, by(onscode laname regioncode)
 		  
 
 **#Quartile Binning (All Scores)
@@ -222,7 +220,7 @@ drop area
 
 encode onscode, gen(ons_id)
 gen post = (year >= 2020)
-
+xtset ons_id year
 
 **#Parallel Trends Means by Quintile
 
@@ -246,5 +244,5 @@ save "data_clean/Lockdown_MMR_NOMIS.dta", replace
 ** 3. Save and Push Everything to GitHub (Now safely at the bottom)
 
 !git add .
-!git commit -m "Update of Model Choice: Diagnostic Test showed no variation. Change of post-treatment"
+!git commit -m "Mantain Regional Data (for London Comparison)"
 !git push -u origin main

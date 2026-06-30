@@ -17,8 +17,7 @@ use "https://raw.githubusercontent.com/jubo-git/Project/main/data_clean/Lockdown
 
 	**Model 1.3: Cluster with fixed effects
 	xtreg mmr1_24m i.tieraquintile##post, fe vce(cluster onscode)
-	margins tieraquintile#post
-	marginsplot, xdimension(post)
+
 
 	**Model 1.4: With NOMIS Controls
 
@@ -29,7 +28,9 @@ use "https://raw.githubusercontent.com/jubo-git/Project/main/data_clean/Lockdown
 	regress mmr1_24m i.tieraquintile##post blackblackbritishblackwels otherethnicgroup householdisdeprivedinonedim householdisdeprivedinthreed householdisdeprivedinfourdi christian buddhist hindu jewish muslim sikh otherreligion, vce(cluster ons_id)
 	estat vif
 
-
+	**Test model: I think London (most of Tier 3 is skewing the results). Will control for region 
+		xtreg mmr1_24m i.tieraquintile##post, fe vce(cluster onscode)
+	
 **#2 Confidence - Tier A: MMR1 at 5 years
 
 	**Model 2.1: Continous Dose
