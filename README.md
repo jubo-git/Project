@@ -1,0 +1,1 @@
+This is a continually updated folder for my Project: Using Difference-in-Difference (DiD) to evaluate whether English local authorities that experienced more stringent lockdown restrictions during the 2020 COVID-19 pandemic have experienced a differential drop in MMR1 and MMR2 uptake in 2021 - 2025.
