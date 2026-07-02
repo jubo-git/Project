@@ -123,7 +123,7 @@ import excel "temp_main.xlsx", sheet("Raw Lockdown Data") firstrow clear
 **#Quartile Binning (All Scores)
 
 	**Confidence: Tier Severity (local infection-rate-based tiers)
-		xtile confidencequintile = total_days_tier, nquantiles(5)
+		xtile confidence_quintile = total_days_tier, nquantiles(5)
 
 	**Complacency: Social Mixing Restrictions
 		xtile complacency_quintile = total_retail, nquantiles(5)
