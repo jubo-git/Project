@@ -1,6 +1,5 @@
 **#0 GitHub Setup
-clear
-use "https://raw.githubusercontent.com/jubo-git/Project/main/data_clean/Lockdown_MMR_NOMIS_NO_LONDON.dta"
+use "https://raw.githubusercontent.com/jubo-git/Project/main/data_clean/Lockdown_MMR_NOMIS.dta"
 
 
 	**Basic DiD -  There is not "indivual" vaccine measurements, rather they are aggregated by coverage at the Local Authority level. The variables (NOMIS measures) vary exclusively at this level, there is therefore no mixture of group and invidual data. Therefore the regression model is adjusted for group level serial correlation over time using the vce(cluster onscode function
@@ -16,7 +15,7 @@ use "https://raw.githubusercontent.com/jubo-git/Project/main/data_clean/Lockdown
 	margins tieraquintile#post
 	marginsplot, xdimension(post)
 
-	**Model 1.3: Cluster with fixed effects (robustness check)
+	**Model 1.3: Cluster with fixed effects
 	xtreg mmr1_24m i.tieraquintile##post, fe vce(cluster onscode)
 
 
@@ -27,10 +26,10 @@ use "https://raw.githubusercontent.com/jubo-git/Project/main/data_clean/Lockdown
 	//Need to find time-dependent NOMIS results. Not census data
 
 	regress mmr1_24m i.tieraquintile##post blackblackbritishblackwels otherethnicgroup householdisdeprivedinonedim householdisdeprivedinthreed householdisdeprivedinfourdi christian buddhist hindu jewish muslim sikh otherreligion, vce(cluster ons_id)
-	
 	estat vif
 
-
+	**Test model: I think London (most of Tier 3 is skewing the results). Will control for region 
+		xtreg mmr1_24m i.tieraquintile##post, fe vce(cluster onscode)
 	
 **#2 Confidence - Tier A: MMR1 at 5 years
 

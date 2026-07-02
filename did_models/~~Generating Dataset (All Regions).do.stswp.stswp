@@ -70,8 +70,6 @@ import excel "temp_main.xlsx", sheet("Raw Lockdown Data") firstrow clear
 
 
 	**Social Distancing 
-		bysort date: egen sd_socialdistancing = sd(socialdistancing)
-		tab sd_socialdistancing
 		bysort onscode: egen total_days_sociald = total(socialdistancing)
 		tab total_days_sociald
 
@@ -99,33 +97,33 @@ import excel "temp_main.xlsx", sheet("Raw Lockdown Data") firstrow clear
 		bysort date: egen sd_tierb = sd(tierb)
 		tab sd_tierb
 	
+**Tier A (14/10/2026 - 04/11/2026) runs to & Tier B (02/12/2020 - 31/12/2020) 4 tiers
+	tab date tierb
+	tab date tiera
 	
+	gen daily_tier = 0
+	replace daily_tier = tiera if !missing(tiera)
+	replace daily_tier = tierb if !missing(tierb)
 	
 	//Reveals that social distancing, primary, secondary hospitality had very little national variation. Just retail shutdown, tier a and tier b. Not using tiers as a weighting factor as it disguses national trends. Not possible or neccessary to build a total score 
 	
 
 	collapse (sum) total_retail = retailshut ///
-		 (sum) tierdays_a = tiera ///
-		 (sum) tierdays_b = tierb, by(onscode laname regioncode)		  
+		 (sum) total_days_tier = daily_tier, by(onscode laname regioncode) 
+		  
 	
 	**Total (standerdise first as tiers are intensity)
-		egen z_tier_a = std(tierdays_a)
-		egen z_tier_b = std(tierdays_b)
+		egen z_total_days_tier = std(total_days_tier)
 		egen z_retail = std(total_retail)
 
 	* Combine the standardized units into an index, then quintile it
-		gen total_index = z_tier_a + z_tier_b + z_retail
+		gen total_index = z_total_days_tier + z_retail
 		xtile final_quintile = total_index, nquantiles(5)
 	
 **#Quartile Binning (All Scores)
 
-	**Confidence: Tier A Severity (local infection-rate-based tiers)
-		xtile tieraquintile = tierdays_a, nquantiles(5)
-
-	**Confidence: Tier B Severity (Plan A/B measures)
-		xtile tierbquintile = tierdays_b, nquantiles(5)
-		//Tier A and Tier B kept separate rather than combined: they represent distinct policy regimes from different phases of the pandemic
-		
+	**Confidence: Tier Severity (local infection-rate-based tiers)
+		xtile confidencequintile = total_days_tier, nquantiles(5)
 
 	**Complacency: Social Mixing Restrictions
 		xtile complacency_quintile = total_retail, nquantiles(5)
