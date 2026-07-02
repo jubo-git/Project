@@ -230,5 +230,5 @@ save "data_clean/Lockdown_MMR_NOMIS.dta", replace
 ** 3. Save and Push Everything to GitHub 
 
 !git add .
-!git commit -m "Mantain Regional Data (for London Comparison)"
+!git commit -m "Combining Tiers Dataset"
 !git push -u origin main
