@@ -228,7 +228,7 @@ xtset ons_id year
 save "data_clean/Lockdown_MMR_NOMIS.dta", replace
 
 ** 3. Save and Push Everything to GitHub 
-
+git config --global user.email "25943553@stu.mmu.ac.uk"
 !git add .
 !git commit -m "Combining Tiers Dataset"
 !git push -u origin main
