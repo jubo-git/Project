@@ -20,7 +20,7 @@ NEED TO RE-CREATE THE TOTAL Q5
 			   title("MMR1 at 24 months rates by lockdown exposure quintile")
 
 	**Numerical Comparison (Quartile more approriate)	
-	xtreg mmr1_24m i.totalquintile##c.year if year < 2020, fe
+	xtreg mmr1_24m i.totalquintile##i.year if year < 2020, fe
 
 	
 *mmr1_5y
