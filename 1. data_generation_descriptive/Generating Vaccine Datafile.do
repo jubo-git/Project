@@ -1,0 +1,68 @@
+**# Extracting Datasets 
+
+	**Variable Names: 
+	**6 in 1 at 12 months (6in1_12m) / 6 in 1 at 2 years (6in1_24m) / 6 in 1 at 5 years (6in1_5y)
+	**1st MMR at 2 years (mmr1_24m) / 1st MMR at 5 years (mmr1_5y) / 1st & 2nd MMR at 5 years (mmr2_5y)
+	
+	
+**# Year-by-Year Extraction 
+
+	*2013-14
+		*Table 10a [B23: G195] (6in1_12m)
+		*Table 11a [B22: I194] (6in1_24m & mmr1_24m)
+		*Table 12a [B23: I195] (6in1_5y & mmr1_5y & mmr2_5y)
+		
+	*2014 - 15
+		*Table 10a [B24: G196] (6in1_12m)
+		*Table 11a [B23: I195] (6in1_24m & mmr1_24m)
+		*Table 12a [B24: I196] (6in1_5y & mmr1_5y & mmr2_5y)
+		
+	*2015 - 16
+		*Table 10a [B31: F203] (6in1_12m)
+		*Table 11a [B30: G202] (6in1_24m & mmr1_24m)
+		*Table 12a [B31: I203] (6in1_5y & mmr1_5y & mmr2_5y)
+		
+	*2016 - 17
+		*Table 8b [B31: F203] (6in1_12m)
+		*Table 9b [B30: G202] (6in1_24m & mmr1_24m)
+		*Table 10b [B31: I203] (6in1_5y & mmr1_5y & mmr2_5y)
+		
+	*2017 - 18
+		*Table 8b [B31: F203] (6in1_12m)
+		*Table 9b [B30: G202] (6in1_24m & mmr1_24m)
+		*Table 10b [B31: I203] (6in1_5y & mmr1_5y & mmr2_5y)
+		
+	*2018 - 19
+		*Table 8b [B31: F203] (6in1_12m)
+		*Table 9b [B30: G202] (6in1_24m & mmr1_24m)
+		*Table 10b [B31: I203] (6in1_5y & mmr1_5y & mmr2_5y)
+		
+	*2019 - 20
+		*Table 8b [B31: F202] (6in1_12m)
+		*Table 9b [B30: G201] (6in1_24m & mmr1_24m)
+		*Table 10b [B31: I202] (6in1_5y & mmr1_5y & mmr2_5y)
+		
+	*2020 - 21
+		*Table 8b [B32: F203] (6in1_12m)
+		*Table 9b [B31: G202] (6in1_24m & mmr1_24m)
+		*Table 10b [B31: I202] (6in1_5y & mmr1_5y & mmr2_5y)
+		
+	*2021 - 22
+		*Table 8b [B32: F204] (6in1_12m)
+		*Table 9b [B31: G203] (6in1_24m & mmr1_24m)
+		*Table 10b [B31: I203] (6in1_5y & mmr1_5y & mmr2_5y)
+		
+	*2022 - 23
+		*Table 8a [A21: F169] (6in1_12m)
+		*Table 9a [A21: G169] (6in1_24m & mmr1_24m)
+		*Table 10a [A21: I169] (6in1_5y & mmr1_5y & mmr2_5y)
+		
+	*2023 - 24
+		*Table 8a [A21: F169] (6in1_12m)
+		*Table 9a [A21: G169] (6in1_24m & mmr1_24m)
+		*Table 10a [A21: I169] (6in1_5y & mmr1_5y & mmr2_5y)
+		
+	*2024 - 25
+		*T4a_UTLA12m [A8: G167] (6in1_12m)
+		*T5a_UTLA24m [A9: H167] (6in1_24m & mmr1_24m)
+		*T6a_UTLA5y [A9: K167] (6in1_5y & mmr1_5y & mmr2_5y)
