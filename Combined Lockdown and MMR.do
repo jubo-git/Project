@@ -1,13 +1,13 @@
 **# 0 GitHub Saving
 cd "C:\Users\25943553\OneDrive - MMU\03 DISSERTATION\STATA\DiD"
 
-** 2. Setup Git (You only need to run these next two lines ONCE ever)
 !git init
 !git remote add origin https://github.com/jubo-git/Project.git
 
-** 3. Save and Push (Your everyday block)
+cd "C:\Users\44799\OneDrive - MMU\03 DISSERTATION\GITHUB"
+!git pull
 !git add .
-!git commit -m "Uploading Datasets (using 25943553)"
+!git commit -m "Updating Data Generating Process"
 !git push -u origin main
 
 

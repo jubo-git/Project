@@ -4,6 +4,14 @@
 	**6 in 1 at 12 months (6in1_12m) / 6 in 1 at 2 years (6in1_24m) / 6 in 1 at 5 years (6in1_5y)
 	**1st MMR at 2 years (mmr1_24m) / 1st MMR at 5 years (mmr1_5y) / 1st & 2nd MMR at 5 years (mmr2_5y)
 	
+**# GitHub
+cd "C:\Users\44799\OneDrive - MMU\03 DISSERTATION\GITHUB"
+!git pull
+!git add .
+!git commit -m "Updating Data Generating Process"
+!git push -u origin main
+
+	
 	
 **# Year-by-Year Extraction 
 

@@ -15,10 +15,23 @@ cd "C:\Users\44799\OneDrive - MMU\03 DISSERTATION\GITHUB"
 	
 **# Year-by-Year Extraction 
 
+*2024 - 25
+		*T4a_UTLA12m [A8: G167] (6in1_12m)
+		*T5a_UTLA24m [A9: H167] (6in1_24m & mmr1_24m)
+		*T6a_UTLA5y [A9: K167] (6in1_5y & mmr1_5y & mmr2_5y)
+		
+		local repo "https://raw.githubusercontent.com/jubo-git/Project/main/0.data_raw"
+		copy "`repo'/2024-to-2025-cover-anual-data-tables.xlsx" "temp_2024_25.xlsx", replace
+		import excel using "temp_2024_25.xlsx", describe
+
 	*2013-14
+	
+	
 		*Table 10a [B23: G195] (6in1_12m)
 		*Table 11a [B22: I194] (6in1_24m & mmr1_24m)
 		*Table 12a [B23: I195] (6in1_5y & mmr1_5y & mmr2_5y)
+		
+		
 		
 	*2014 - 15
 		*Table 10a [B24: G196] (6in1_12m)
@@ -65,12 +78,8 @@ cd "C:\Users\44799\OneDrive - MMU\03 DISSERTATION\GITHUB"
 		*Table 9a [A21: G169] (6in1_24m & mmr1_24m)
 		*Table 10a [A21: I169] (6in1_5y & mmr1_5y & mmr2_5y)
 		
-	*2023 - 24
+*2023 - 24
 		*Table 8a [A21: F169] (6in1_12m)
 		*Table 9a [A21: G169] (6in1_24m & mmr1_24m)
 		*Table 10a [A21: I169] (6in1_5y & mmr1_5y & mmr2_5y)
 		
-	*2024 - 25
-		*T4a_UTLA12m [A8: G167] (6in1_12m)
-		*T5a_UTLA24m [A9: H167] (6in1_24m & mmr1_24m)
-		*T6a_UTLA5y [A9: K167] (6in1_5y & mmr1_5y & mmr2_5y)
