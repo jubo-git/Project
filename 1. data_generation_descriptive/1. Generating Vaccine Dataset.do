@@ -586,31 +586,47 @@ use "`master_2025'", clear
 	append using "`master_2015'"
 	append using "`master_2014'"
 
-*Tidying-Up 
-sort onscode year
-order onscode laname region year dtp_12m dtp_24m mmr1_24m dtp_5y dtp_boost_5y mmr1_5y mmr2_5y
-
-	replace laname = regexr(laname, "\([0-9]+\)", "") if strpos(laname, "(") > 0
-	replace laname = trim(laname)
-	drop if laname == ""
-	drop if laname == "[z]"
-	
-	* Backdating ONS codes for boundary changes consistency
-	drop if inlist(onscode, "E06000029", "E06000061", "E06000062") 
-	replace onscode = "E06000058" if onscode == "E06000028" 
-	replace laname = "Bournemouth, Christchurch and Poole" if onscode == "E06000058"
-	replace laname = "Westminster" if onscode == "E09000033" 
-	replace laname = "Bristol" if onscode == "E06000023" 
-	replace onscode = "E06000060" if onscode == "E10000002" 
-	replace laname = "Herefordshire" if onscode == "E06000019" 
-	replace onscode = "E06000059" if onscode == "E10000009" 
-	replace laname = "Kingston upon Hull" if onscode == "E06000010" 	
-	replace onscode = "E06000065" if onscode == "E10000023" 
-	replace onscode = "E06000066" if onscode == "E10000027" 
-
+*Mid-Point Save 
 *Save 
 cd "C:\Users\44799\OneDrive - MMU\03 DISSERTATION\GITHUB"
-save "2. data_clean\final_combined_vaccine_dataset.dta", replace
+save "2. data_clean\mid_combined_vaccine_dataset.dta", replace
+
+*Tidying-Up 
+use "2. data_clean\mid_combined_vaccine_dataset.dta"
+replace laname = trim(regexr(laname, "\([0-9]+\)", ""))
+drop if inlist(laname, "", "[z]")
+replace laname = "St Helens" if laname == "St. Helens"
+
+* Harmonized ONS Code Recoding
+replace onscode = "E06000058" if onscode == "E06000028"  // BCP Council
+replace onscode = "E06000060" if onscode == "E10000002"  // Buckinghamshire
+replace onscode = "E06000059" if onscode == "E10000009"  // Cheshire East
+replace onscode = "E06000065" if onscode == "E10000023"  // North Yorkshire
+replace onscode = "E06000066" if onscode == "E10000027"  // Somerset
+
+* 3. Backdating Split Unitaries to legacy County structures
+replace onscode = "E10000006" if inlist(onscode, "E06000063", "E06000064") // Cumberland / Westmorland -> Cumbria
+replace onscode = "E10000021" if inlist(onscode, "E06000061", "E06000062") // North/West Northants -> Northamptonshire
+
+*Drop unneeded codes & standardize names globally
+drop if onscode == "E06000029" // Drop Isles of Scilly
+
+replace laname = "Bournemouth, Christchurch and Poole" if onscode == "E06000058"
+replace laname = "Westminster" if onscode == "E09000033" 
+replace laname = "Bristol" if onscode == "E06000023" 
+replace laname = "Herefordshire" if onscode == "E06000019" 
+replace laname = "Kingston upon Hull" if onscode == "E06000010" 
+replace laname = "Cumbria" if onscode == "E10000006"
+replace laname = "Northamptonshire" if onscode == "E10000021"
+replace laname = "St Helens" if onscode == "E08000012"
+
+collapse (sum) dtp_12m dtp_24m mmr1_24m dtp_5y dtp_boost_5y mmr1_5y mmr2_5y, by(onscode laname region year)
+
+* Save as a clean temporary file ready for merging
+sort onscode year
+*Save 
+	cd "C:\Users\44799\OneDrive - MMU\03 DISSERTATION\GITHUB"
+	save "2. data_clean\final_combined_vaccine_dataset.dta", replace
 
 capture erase "temp_2024_25.xlsx"
 capture erase "temp_2023_24.xlsx"

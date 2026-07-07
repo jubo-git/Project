@@ -7,6 +7,6 @@ cd "C:\Users\44799\OneDrive - MMU\03 DISSERTATION\GITHUB"
 
 !git pull
 !git add .
-!git commit -m "Update of Lockdown Generation and Dataset Orginisation"
+!git commit -m "New Dataset Generation Complete (with 6in1 variables and flexibility)"
 !git push -u origin main
 

@@ -32,5 +32,29 @@ merge m:1 onscode using "2. data_clean/nomis_dataset.dta"
 	list laname onscode if year == . //They have come over from NOMIS data where they don't match any codes. 
 	drop if year == .
 	
+		* Rename ethnic group variables _pct 
+	rename white white_pct
+	rename asianasianbritishorasianwe asian_pct
+	rename blackblackbritishblackwels black_pct
+	rename mixedormultipleethnicgroups mixed_pct
+	rename otherethnicgroup other_pct
+
+	* Rename the deprivation variables _pct
+	rename householdisnotdeprivedinany hh_deprived_0_pct
+	rename householdisdeprivedinonedim hh_deprived_1_pct
+	rename householdisdeprivedintwodim hh_deprived_2_pct
+	rename householdisdeprivedinthreed hh_deprived_3_pct
+	rename householdisdeprivedinfourdi hh_deprived_4_pct
+	
+	*Rename religion variables _pct
+	rename noreligion noreligion_pct
+	rename christian christian_pct
+	rename buddhist	buddhist_pct
+	rename hindu hindu_pct
+	rename jewish jewish_pct
+	rename muslim muslim_pct
+	rename sikh sikh_pct
+	rename otherreligion otherreligion_pct
+	
 	cd "C:\Users\44799\OneDrive - MMU\03 DISSERTATION\GITHUB\"	
 	save "2. data_clean/full_dataset.dta", replace
