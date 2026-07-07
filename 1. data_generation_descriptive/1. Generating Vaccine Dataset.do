@@ -50,7 +50,9 @@ copy "`repo'/2024-to-2025-cover-anual-data-tables.xlsx" "temp_2024_25.xlsx", rep
 		merge 1:1 onscode using "`data24m'", nogenerate
 		merge 1:1 onscode using "`data5y'", nogenerate
 		gen year = "2025"
-		save "temp_2024_25.dta", replace
+		
+		tempfile master_2025
+		save "`master_2025'", replace
 	
 **# 2023 - 24 
 local repo "https://raw.githubusercontent.com/jubo-git/Project/main/0.%20data_raw_excel/COVER%20Data"
@@ -81,7 +83,7 @@ copy "`repo'/2023%20-%202024%20childhood-vaccinations.xlsx" "temp_2023_24.xlsx",
 		tempfile data24m_24
 		save "`data24m_24'", replace
 		
-		*Table 10a [A21: I169] (6in1_5y & booster & mmr1_5y & mmr2_5y) - altered drop to keep booster (G)
+		*Table 10a [A21: I169] (6in1_5y & booster & mmr1_5y & mmr2_5y)
 		import excel "temp_2023_24.xlsx", sheet("Table 10a") cellrange(A21:I169) clear
 		drop D E
 		rename A onscode
@@ -101,7 +103,9 @@ copy "`repo'/2023%20-%202024%20childhood-vaccinations.xlsx" "temp_2023_24.xlsx",
 		merge 1:1 onscode using "`data24m_24'", nogenerate
 		merge 1:1 onscode using "`data5y_24'", nogenerate
 		gen year = "2024"
-		save "temp_2023_24.dta", replace
+		
+		tempfile master_2024
+		save "`master_2024'", replace
 
 **# 2022 - 23 
 local repo "https://raw.githubusercontent.com/jubo-git/Project/main/0.%20data_raw_excel/COVER%20Data"
@@ -132,7 +136,7 @@ copy "`repo'/2022-2023-childhood_vaccination_datatables.xlsx" "temp_2022_23.xlsx
 		tempfile data24m_23
 		save "`data24m_23'"
 
-		*Table 10a [A21: I169] (6in1_5y & booster & mmr1_5y & mmr2_5y) - altered drop to keep booster (G)
+		*Table 10a [A21: I169] (6in1_5y & booster & mmr1_5y & mmr2_5y)
 		import excel "temp_2022_23.xlsx", sheet("Table 10a") cellrange(A21:I169) clear
 		drop D E
 		rename A onscode
@@ -152,7 +156,9 @@ copy "`repo'/2022-2023-childhood_vaccination_datatables.xlsx" "temp_2022_23.xlsx
 		merge 1:1 onscode using "`data24m_23'", nogenerate
 		merge 1:1 onscode using "`data5y_23'", nogenerate
 		gen year = "2023"
-		save "temp_2022_23.dta", replace
+		
+		tempfile master_2023
+		save "`master_2023'", replace
 
 **# 2021 - 22
 local repo "https://raw.githubusercontent.com/jubo-git/Project/main/0.%20data_raw_excel/COVER%20Data"
@@ -182,7 +188,7 @@ copy "`repo'/2021-22%20Childhood%20Vaccination%20Statistics.xlsx" "temp_2021_22.
 		tempfile data24m_22
 		save "`data24m_22'"
 
-		*Table 10b [B31: I203] (6in1_5y & booster & mmr1_5y & mmr2_5y) - altered drop to keep booster (G)
+		*Table 10b [B31: I203] (6in1_5y & booster & mmr1_5y & mmr2_5y)
 		import excel "temp_2021_22.xlsx", sheet("Table 10b") cellrange(B31:I203) clear
 		drop D E
 		rename B laname
@@ -201,7 +207,9 @@ copy "`repo'/2021-22%20Childhood%20Vaccination%20Statistics.xlsx" "temp_2021_22.
 		merge 1:1 onscode using "`data24m_22'", nogenerate
 		merge 1:1 onscode using "`data5y_22'", nogenerate
 		gen year = "2022"
-		save "temp_2021_22.dta", replace
+		
+		tempfile master_2022
+		save "`master_2022'", replace
 
 **# 2020 - 21
 local repo "https://raw.githubusercontent.com/jubo-git/Project/main/0.%20data_raw_excel/COVER%20Data"
@@ -231,7 +239,7 @@ copy "`repo'/2020-21-Childhood%20Vaccination%20Statistics.xlsx" "temp_2020_21.xl
 		tempfile data24m_21
 		save "`data24m_21'"
 
-		*Table 10b [B31: I202] (6in1_5y & booster & mmr1_5y & mmr2_5y) - altered drop to keep booster (G)
+		*Table 10b [B31: I202] (6in1_5y & booster & mmr1_5y & mmr2_5y)
 		import excel "temp_2020_21.xlsx", sheet("Table 10b") cellrange(B31:I202) clear
 		drop D E
 		rename C onscode
@@ -250,7 +258,9 @@ copy "`repo'/2020-21-Childhood%20Vaccination%20Statistics.xlsx" "temp_2020_21.xl
 		merge 1:1 onscode using "`data24m_21'", nogenerate
 		merge 1:1 onscode using "`data5y_21'", nogenerate
 		gen year = "2021"
-		save "temp_2020_21.dta", replace
+		
+		tempfile master_2021
+		save "`master_2021'", replace
 		
 **# 2019 - 20
 local repo "https://raw.githubusercontent.com/jubo-git/Project/main/0.%20data_raw_excel/COVER%20Data"
@@ -280,7 +290,7 @@ copy "`repo'/2019-20-child-vacc-stat-eng-data-tables.xlsx" "temp_2019_20.xlsx", 
 		tempfile data24m_20
 		save "`data24m_20'"
 
-		*Table 10b [B31: I202] (6in1_5y & booster & mmr1_5y & mmr2_5y) - altered drop to keep booster (G)
+		*Table 10b [B31: I202] (6in1_5y & booster & mmr1_5y & mmr2_5y)
 		import excel "temp_2019_20.xlsx", sheet("Table 10b") cellrange(B31:I202) clear
 		drop D E
 		rename C onscode
@@ -299,7 +309,9 @@ copy "`repo'/2019-20-child-vacc-stat-eng-data-tables.xlsx" "temp_2019_20.xlsx", 
 		merge 1:1 onscode using "`data24m_20'", nogenerate
 		merge 1:1 onscode using "`data5y_20'", nogenerate
 		gen year = "2020"
-		save "temp_2019_20.dta", replace
+		
+		tempfile master_2020
+		save "`master_2020'", replace
 
 **# 2018 - 19
 local repo "https://raw.githubusercontent.com/jubo-git/Project/main/0.%20data_raw_excel/COVER%20Data"
@@ -329,7 +341,7 @@ copy "`repo'/2018-19-child-vacc-stat-eng-tables.xlsx" "temp_2018_19.xlsx", repla
 		tempfile data24m_19
 		save "`data24m_19'"
 
-		*Table 10b [B31: I203] (6in1_5y & booster & mmr1_5y & mmr2_5y) - altered drop to keep booster (G)
+		*Table 10b [B31: I203] (6in1_5y & booster & mmr1_5y & mmr2_5y)
 		import excel "temp_2018_19.xlsx", sheet("Table 10b") cellrange(B31:I203) clear
 		drop D E
 		rename C onscode
@@ -348,7 +360,9 @@ copy "`repo'/2018-19-child-vacc-stat-eng-tables.xlsx" "temp_2018_19.xlsx", repla
 		merge 1:1 onscode using "`data24m_19'", nogenerate
 		merge 1:1 onscode using "`data5y_19'", nogenerate
 		gen year = "2019"
-		save "temp_2018_19.dta", replace
+		
+		tempfile master_2019
+		save "`master_2019'", replace
 
 **# 2017 - 18
 local repo "https://raw.githubusercontent.com/jubo-git/Project/main/0.%20data_raw_excel/COVER%20Data"
@@ -378,7 +392,7 @@ copy "`repo'/2017-18-child-vacc-stat-eng-tab.xlsx" "temp_2017_18.xlsx", replace
 		tempfile data24m_18
 		save "`data24m_18'"
 
-		*Table 10b [B31: I203] (6in1_5y & booster & mmr1_5y & mmr2_5y) - altered drop to keep booster (G)
+		*Table 10b [B31: I203] (6in1_5y & booster & mmr1_5y & mmr2_5y)
 		import excel "temp_2017_18.xlsx", sheet("Table 10b") cellrange(B31:I203) clear
 		drop D E
 		rename C onscode
@@ -397,7 +411,9 @@ copy "`repo'/2017-18-child-vacc-stat-eng-tab.xlsx" "temp_2017_18.xlsx", replace
 		merge 1:1 onscode using "`data24m_18'", nogenerate
 		merge 1:1 onscode using "`data5y_18'", nogenerate
 		gen year = "2018"
-		save "temp_2017_18.dta", replace
+		
+		tempfile master_2018
+		save "`master_2018'", replace
 
 **# 2015 - 16
 local repo "https://raw.githubusercontent.com/jubo-git/Project/main/0.%20data_raw_excel/COVER%20Data"
@@ -446,7 +462,9 @@ copy "`repo'/2015-16-nhs-immu-stat-eng-tab.xlsx" "temp_2015_16.xlsx", replace
 		merge 1:1 onscode using "`data24m_16'", nogenerate
 		merge 1:1 onscode using "`data5y_16'", nogenerate
 		gen year = "2016"
-		save "temp_2015_16.dta", replace
+		
+		tempfile master_2016
+		save "`master_2016'", replace
 
 **# 2014 - 15
 local repo "https://raw.githubusercontent.com/jubo-git/Project/main/0.%20data_raw_excel/COVER%20Data"
@@ -477,7 +495,7 @@ copy "`repo'/2014-15-nhs-immu-stat-eng-tab.xlsx" "temp_2014_15.xlsx", replace
 		tempfile data24m_15
 		save "`data24m_15'"
 
-		*Table 12a [B24: I196] (6in1_5y & booster & mmr1_5y & mmr2_5y) - altered drop to keep booster (F)
+		*Table 12a [B24: I196] (6in1_5y & booster & mmr1_5y & mmr2_5y)
 		import excel "temp_2014_15.xlsx", sheet("Table 12a") cellrange(B24:J196) clear
 		drop D E
 		rename C onscode
@@ -496,7 +514,9 @@ copy "`repo'/2014-15-nhs-immu-stat-eng-tab.xlsx" "temp_2014_15.xlsx", replace
 		merge 1:1 onscode using "`data24m_15'", nogenerate
 		merge 1:1 onscode using "`data5y_15'", nogenerate
 		gen year = "2015"
-		save "temp_2014_15.dta", replace
+		
+		tempfile master_2015
+		save "`master_2015'", replace
 
 **# 2013 - 14
 local repo "https://raw.githubusercontent.com/jubo-git/Project/main/0.%20data_raw_excel/COVER%20Data"
@@ -526,12 +546,11 @@ copy "`repo'/2013-14-nhs-immu-stat-eng-tab-exc.xlsx" "temp_2013_14.xlsx", replac
 		tempfile data24m_14
 		save "`data24m_14'"
 
-		*Table 12a [B23: I195] (6in1_5y & booster & mmr1_5y & mmr2_5y) - altered drop to keep booster (F)
+		*Table 12a [B23: I195] (6in1_5y & booster & mmr1_5y & mmr2_5y)
 		import excel "temp_2013_14.xlsx", sheet("Table 12a") cellrange(A23:I195) clear
 		drop D E
 		rename C onscode
 		rename B laname
-
 		rename F dtp_boost_5y
 		rename G dtp_5y
 		rename H mmr1_5y
@@ -547,38 +566,47 @@ copy "`repo'/2013-14-nhs-immu-stat-eng-tab-exc.xlsx" "temp_2013_14.xlsx", replac
 		merge 1:1 onscode using "`data5y_14'", nogenerate
 		gen year = "2014"
 		destring dtp_boost_5y dtp_5y, replace force
-		save "temp_2013_14.dta", replace
+		
+		tempfile master_2014
+		save "`master_2014'", replace
 	
 
-**# Master Vaccine Dateset 
+**# Master Vaccine Dataset 
 
-use "temp_2024_25.dta", clear
+use "`master_2025'", clear
 
-codebook laname
- codebook laname, t(150)
+	append using "`master_2024'"
+	append using "`master_2023'"
+	append using "`master_2022'"
+	append using "`master_2021'"
+	append using "`master_2020'"
+	append using "`master_2019'"
+	append using "`master_2018'"
+	append using "`master_2016'"
+	append using "`master_2015'"
+	append using "`master_2014'"
 
-	* Append all subsequent years 
-	append using "temp_2023_24.dta"
-	append using "temp_2022_23.dta"
-	append using "temp_2021_22.dta"
-	append using "temp_2019_20.dta"
-	append using "temp_2018_19.dta"
-	append using "temp_2017_18.dta"
-	append using "temp_2015_16.dta"
-	append using "temp_2014_15.dta"
-	append using "temp_2013_14.dta"
-
-*Clean up the final organization
+*Tidying-Up 
 sort onscode year
 order onscode laname region year dtp_12m dtp_24m mmr1_24m dtp_5y dtp_boost_5y mmr1_5y mmr2_5y
 
-	*Removing any naming inconsistencies
 	replace laname = regexr(laname, "\([0-9]+\)", "") if strpos(laname, "(") > 0
 	replace laname = trim(laname)
-	
-	**Removing regional level stats
 	drop if laname == ""
 	drop if laname == "[z]"
 
-* Save final panel dataset
-save "final_combined_vaccine_dataset.dta", replace
+local target_folder "2. data_clean"
+capture mkdir "`target_folder'"
+save "`target_folder'/final_combined_vaccine_dataset.dta", replace
+
+capture erase "temp_2024_25.xlsx"
+capture erase "temp_2023_24.xlsx"
+capture erase "temp_2022_23.xlsx"
+capture erase "temp_2021_22.xlsx"
+capture erase "temp_2020_21.xlsx"
+capture erase "temp_2019_20.xlsx"
+capture erase "temp_2018_19.xlsx"
+capture erase "temp_2017_18.xlsx"
+capture erase "temp_2015_16.xlsx"
+capture erase "temp_2014_15.xlsx"
+capture erase "temp_2013_14.xlsx"
