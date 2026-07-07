@@ -6,7 +6,7 @@ copy "`repo'/2024-to-2025-cover-anual-data-tables.xlsx" "temp_2024_25.xlsx", rep
 		import excel "temp_2024_25.xlsx", sheet("T4a_UTLA12m") cellrange(A8:G167) firstrow clear
 		drop OrganisationDataServicecode Note Numberaged12months
 		rename *, lower
-		rename localauthority laname
+		rename laname laname
 		rename code onscode
 		rename regionname region 
 		rename coverageat12monthsdtapipvh dtp_12m
@@ -19,7 +19,7 @@ copy "`repo'/2024-to-2025-cover-anual-data-tables.xlsx" "temp_2024_25.xlsx", rep
 		import excel "temp_2024_25.xlsx", sheet("T5a_UTLA24m") cellrange(A8:H167) firstrow clear
 		drop OrganisationDataServicecode Note Numberaged24months
 		rename *, lower
-		rename localauthority laname
+		rename laname laname
 		rename code onscode
 		rename regionname region 
 		rename coverageat24monthsdtapipvh dtp_24m
@@ -33,7 +33,7 @@ copy "`repo'/2024-to-2025-cover-anual-data-tables.xlsx" "temp_2024_25.xlsx", rep
 		import excel "temp_2024_25.xlsx", sheet("T6a_UTLA5y") cellrange(A8:K167) firstrow clear
 		drop OrganisationDataServicecode Note Numberaged5years Coverageat5yearsHibMenCboo
 		rename *, lower
-		rename localauthority laname
+		rename laname laname
 		rename code onscode
 		rename regionname region 
 		rename coverageat5yearsdtapipvhib dtp_5y
@@ -594,10 +594,22 @@ order onscode laname region year dtp_12m dtp_24m mmr1_24m dtp_5y dtp_boost_5y mm
 	replace laname = trim(laname)
 	drop if laname == ""
 	drop if laname == "[z]"
+	
+	* Backdating ONS codes for boundary changes consistency
+	drop if inlist(onscode, "E06000029", "E06000061", "E06000062") 
+	replace onscode = "E06000058" if onscode == "E06000028" 
+	replace laname = "Bournemouth, Christchurch and Poole" if onscode == "E06000058"
+	replace laname = "Westminster" if onscode == "E09000033" 
+	replace laname = "Bristol" if onscode == "E06000023" 
+	replace onscode = "E06000060" if onscode == "E10000002" 
+	replace laname = "Herefordshire" if onscode == "E06000019" 
+	replace onscode = "E06000059" if onscode == "E10000009" 
+	replace laname = "Kingston upon Hull" if onscode == "E06000010" 	
+	replace onscode = "E06000065" if onscode == "E10000023" 
+	replace onscode = "E06000066" if onscode == "E10000027" 
 
-local target_folder "2. data_clean"
-capture mkdir "`target_folder'"
-save "`target_folder'/final_combined_vaccine_dataset.dta", replace
+
+save  "C:\Users\44799\OneDrive - MMU\03 DISSERTATION\GITHUB\2. data_clean\final_combined_vaccine_dataset.dta", replace
 
 capture erase "temp_2024_25.xlsx"
 capture erase "temp_2023_24.xlsx"
