@@ -1,5 +1,5 @@
 **#3 NOMIS
-local repo "https://raw.githubusercontent.com/jubo-git/Project/main/data_raw"
+local repo "https://raw.githubusercontent.com/jubo-git/Project/main/0.%20data_raw_excel/NOMIS"
 local datasets ethnic_group_2021 deprivation_2021 religion_2021
 
 foreach group of local datasets {
@@ -16,6 +16,7 @@ foreach group of local datasets {
     capture erase "temp_`group'.xlsx"
 }
 
+drop totalallusualresidents
 
 use "`t_ethnic_group_2021'", clear
 merge 1:1 onscode using "`t_deprivation_2021'", nogenerate
@@ -27,4 +28,7 @@ drop if substr(onscode, 1, 1) == "W"
 
 gen deprivation_score = (1*householdisdeprivedinonedim) + (2*householdisdeprivedintwodim) + (3*householdisdeprivedinthreed) + (4*householdisdeprivedinfourdi)
 
-save "data_clean/Nomis.dta", replace
+
+*Save 
+cd "C:\Users\44799\OneDrive - MMU\03 DISSERTATION\GITHUB"
+save "2. data_clean/nomis_dataset.dta", replace

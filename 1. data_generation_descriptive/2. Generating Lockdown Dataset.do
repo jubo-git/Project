@@ -134,7 +134,6 @@ import excel "temp_main.xlsx", sheet("dataset") firstrow clear
 	* Drop specific areas not reflected in Vaccine Data 
 	drop if inlist(onscode, "E06000017", "E06000053", "E09000001", "E07000188")
 	sort laname
-	save "C:\Users\44799\OneDrive - MMU\03 DISSERTATION\GITHUB\2. data_clean\lockdown_dataset.dta", /// 
-	replace
-
+	cd "C:\Users\44799\OneDrive - MMU\03 DISSERTATION\GITHUB\"
+	save "2. data_clean\lockdown_dataset.dta", replace
 
