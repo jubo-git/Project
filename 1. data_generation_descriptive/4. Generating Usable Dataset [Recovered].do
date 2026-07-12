@@ -1,5 +1,5 @@
 **#4 Creating Usable Dataset 
-cd "C:\Users\44799\OneDrive - MMU\03 DISSERTATION\GITHUB\"
+// cd "C:\Users\44799\OneDrive - MMU\03 DISSERTATION\GITHUB\"
 
 clear
 use "2. data_clean\final_combined_vaccine_dataset.dta"
@@ -20,7 +20,7 @@ merge m:1 onscode using "2. data_clean/nomis_dataset.dta"
 
 	**Investigating Mismatched via _merge variable 
 	tab laname _merge //note there is no NOMIS data for Northamptonshire and Cumbria 
-	drop area z_tier z_retail totalallhouseholds _merge // remove unncessary variables for analysis 
+	drop area  totalallhouseholds _merge // remove unncessary variables for analysis 
 
 	**Prepare for DiD analysis by encoding ONS, generating post variable and outlining panel data 
 	encode onscode, gen(ons_id)
@@ -59,5 +59,5 @@ merge m:1 onscode using "2. data_clean/nomis_dataset.dta"
 	rename otherreligion otherreligion_pct
 	
 	
-	cd "C:\Users\44799\OneDrive - MMU\03 DISSERTATION\GITHUB\"	
+//	cd "C:\Users\44799\OneDrive - MMU\03 DISSERTATION\GITHUB\"	
 	save "2. data_clean/full_dataset.dta", replace

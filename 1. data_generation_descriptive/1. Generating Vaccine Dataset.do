@@ -415,6 +415,58 @@ copy "`repo'/2017-18-child-vacc-stat-eng-tab.xlsx" "temp_2017_18.xlsx", replace
 		tempfile master_2018
 		save "`master_2018'", replace
 
+		
+**# 2016 - 17
+local repo "https://raw.githubusercontent.com/jubo-git/Project/main/0.%20data_raw_excel/COVER%20Data"
+copy "`repo'/2016-17-nhs-immu-stat-eng-tab.xlsx" "temp_2016_17.xlsx", replace
+
+		*Table 8b [B31: F203] (6in1_12m)
+		import excel "temp_2016_17.xlsx", sheet("Table 8b") cellrange(B31:F203) clear
+		drop D E
+		rename C onscode
+		rename B laname
+		rename F dtp_12m
+		gen region = ""
+		keep onscode laname region dtp_12m
+		drop if missing(onscode) | onscode == "ONS Code"
+		tempfile data12m_17
+		save "`data12m_17'"
+
+		*Table 9b [B30: G202] (6in1_24m & mmr1_24m)
+		import excel "temp_2016_17.xlsx", sheet("Table 9b") cellrange(B30:G202) clear
+		drop D E
+		rename C onscode
+		rename B laname
+		rename F dtp_24m
+		rename G mmr1_24m
+		keep onscode laname dtp_24m mmr1_24m
+		drop if missing(onscode) | onscode == "ONS Code"
+		tempfile data24m_17
+		save "`data24m_17'"
+
+		*Table 10b [B31: I203] (6in1_5y & booster & mmr1_5y & mmr2_5y)
+		import excel "temp_2016_17.xlsx", sheet("Table 10b") cellrange(B31:I203) clear
+		drop D E
+		rename C onscode
+		rename B laname
+		rename F dtp_5y
+		rename G dtp_boost_5y
+		rename H mmr1_5y
+		rename I mmr2_5y
+		keep onscode laname dtp_5y dtp_boost_5y mmr1_5y mmr2_5y
+		drop if missing(onscode) | onscode == "ONS Code"
+		tempfile data5y_17
+		save "`data5y_17'"
+
+		*Merge all temp files to create 2018 dataset 
+		use "`data12m_17'", clear
+		merge 1:1 onscode using "`data24m_17'", nogenerate
+		merge 1:1 onscode using "`data5y_17'", nogenerate
+		gen year = "2017"
+		
+		tempfile master_2017
+		save "`master_2017'", replace
+		
 **# 2015 - 16
 local repo "https://raw.githubusercontent.com/jubo-git/Project/main/0.%20data_raw_excel/COVER%20Data"
 copy "`repo'/2015-16-nhs-immu-stat-eng-tab.xlsx" "temp_2015_16.xlsx", replace
@@ -582,6 +634,7 @@ use "`master_2025'", clear
 	append using "`master_2020'"
 	append using "`master_2019'"
 	append using "`master_2018'"
+	append using "`master_2017'"
 	append using "`master_2016'"
 	append using "`master_2015'"
 	append using "`master_2014'"
@@ -597,28 +650,48 @@ replace laname = trim(regexr(laname, "\([0-9]+\)", ""))
 drop if inlist(laname, "", "[z]")
 replace laname = "St Helens" if laname == "St. Helens"
 
-* Harmonized ONS Code Recoding
-replace onscode = "E06000058" if onscode == "E06000028"  // BCP Council
-replace onscode = "E06000060" if onscode == "E10000002"  // Buckinghamshire
-replace onscode = "E06000059" if onscode == "E10000009"  // Cheshire East
-replace onscode = "E06000065" if onscode == "E10000023"  // North Yorkshire
-replace onscode = "E06000066" if onscode == "E10000027"  // Somerset
+* Harmonised ONS Code Recoding
 
-* 3. Backdating Split Unitaries to legacy County structures
-replace onscode = "E10000006" if inlist(onscode, "E06000063", "E06000064") // Cumberland / Westmorland -> Cumbria
-replace onscode = "E10000021" if inlist(onscode, "E06000061", "E06000062") // North/West Northants -> Northamptonshire
+	replace onscode = "E06000058" if onscode == "E06000028"  
+	replace laname = "Bournemouth, Christchurch and Poole" if onscode == "E06000058" // BCP Council" // BCP Council
+
+	replace onscode = "E06000060" if onscode == "E10000002" // Buckinghamshire
+
+	replace onscode = "E06000059" if onscode == "E10000009" // Dorset
+
+	replace onscode = "E06000065" if onscode == "E10000023" // North Yorkshire
+	
+	replace onscode = "E06000066" if onscode == "E10000027" // Somerset
+
+*Create a Northamptonshire Variable (using the average of the post 2021 regions to create a Northamptonshire 2014 - 2025 variable)
+
+	* Calculate averages for the split authorities
+	local vars dtp_12m dtp_24m mmr1_24m dtp_5y mmr1_5y dtp_boost_5y mmr2_5y
+
+	foreach v of local vars {
+		bysort year: egen avg_`v' = mean(cond(inlist(onscode,"E06000061","E06000062"), `v', .))
+	}
+
+	* Keep one copy (North Northamptonshire) to become Northamptonshire
+	foreach v of local vars {
+		replace `v' = avg_`v' if onscode=="E06000061"
+		drop avg_`v'
+	}
+
+	replace onscode = "E10000021" if onscode=="E06000061"
+	replace laname  = "Northamptonshire" if onscode=="E10000021"
+
+	* Remove West Northamptonshire
+	drop if onscode=="E06000062"
 
 *Drop unneeded codes & standardize names globally
-drop if onscode == "E06000029" // Drop Isles of Scilly
+		drop if onscode == "E06000029" // Drop Poole (combined into Bournemouth)
+	replace laname = "Westminster" if onscode == "E09000033" //Combining City of Westminster (2014-15 with Westminster)
+	replace laname = "Bristol" if onscode == "E06000023" //Renaming Bristol, city of 
+	replace laname = "Herefordshire" if onscode == "E06000019" //Renaming Herefordshire, County of
+	replace laname = "Kingston upon Hull" if onscode == "E06000010" //renaming Kingston upon Hull, City of
+	replace laname = "Northamptonshire" if onscode == "E10000021"
 
-replace laname = "Bournemouth, Christchurch and Poole" if onscode == "E06000058"
-replace laname = "Westminster" if onscode == "E09000033" 
-replace laname = "Bristol" if onscode == "E06000023" 
-replace laname = "Herefordshire" if onscode == "E06000019" 
-replace laname = "Kingston upon Hull" if onscode == "E06000010" 
-replace laname = "Cumbria" if onscode == "E10000006"
-replace laname = "Northamptonshire" if onscode == "E10000021"
-replace laname = "St Helens" if onscode == "E08000012"
 
 collapse (sum) dtp_12m dtp_24m mmr1_24m dtp_5y dtp_boost_5y mmr1_5y mmr2_5y, by(onscode laname region year)
 

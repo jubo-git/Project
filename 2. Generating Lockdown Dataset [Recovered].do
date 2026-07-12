@@ -97,31 +97,25 @@ import excel "temp_main.xlsx", sheet("dataset") firstrow clear
 	
 //Reveals that social distancing, primary, secondary hospitality had very little national variation. Just retail shutdown, tier a and tier b. Not using tiers as a weighting factor as it disguses national trends. Not possible or neccessary to build a total score.
 
-	**From lockdown dataset information Tier A and Tier B were a concurrent scheme. Verified below 
-	tab date tiera
-	tab date tierb
-	
-	**Tier A runs 14th of October - 4th November and Tier B runs 2nd December to 1st of Jan. They are therefore combined into one tier variable 
-	
-	*  combine the tiers at the daily level
-	* combine the tiers at the daily level
-	egen tier = rowfirst(tiera tierb)
+**# Creating Quintiles 
 
-	* make explicit day-count flag (only counts if tier is genuinely 0/1)
-
-	** Collapse using to capture the total cumulative duration x severity
-	collapse (sum) total_retail = retailshut ///
-			 (sum) total_tier = tier, by(onscode laname regioncode)		  
-	
-	* quintiles
-	xtile tier_quintile   = total_tier, nquantiles(5)
-	xtile retail_quintile = total_retail, nquantiles(5)
-		
 		//Hospitality dropped: diagnostic showed near-zero cross-LA variation
 		//Retail retained as sole Complacency proxy - confirmed genuine local variation.
 		//Note: Convenience (primary/secondary school closures) dropped entirely. Diagnostic showed 99.34% of LAs identical on both total_days_closed (72 days) and total_days_secondary (86 days) - closures were applied near-nationally
 		
-	
+		**From lockdown dataset information Tier A and Tier B were a 		concurrent scheme. Verified below 
+		gen daily_tier = 0
+		replace daily_tier = tiera if !missing(tiera)
+		replace daily_tier = tierb if !missing(tierb)
+
+	** Collapse using to capture the total cumulative duration x 		severity
+	collapse (sum) total_retail = retailshut ///
+			 (sum) total_tier = daily_tier, by(onscode laname regioncode)		  
+
+	xtile tier_quintile   = total_tier, nquantiles(5)
+	xtile retail_quintile = total_retail, nquantiles(5)
+		
+		
 	* Drop specific areas not reflected in Vaccine Data 
 	drop if inlist(onscode, "E06000017", "E06000053", "E09000001", "E07000188")
 	sort laname
