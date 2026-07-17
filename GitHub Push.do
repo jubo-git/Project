@@ -7,6 +7,6 @@ cd "C:\Users\44799\OneDrive - MMU\03 DISSERTATION\GITHUB"
 
 !git pull
 !git add .
-!git commit -m "Updating of File Order, Verification of MAtching Dataset Generation and "
+!git commit -m "Updating of File Order, Verification of MAtching Dataset Generation and Parallel Trend Test"
 !git push -u origin main
 

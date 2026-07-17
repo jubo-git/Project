@@ -15,6 +15,7 @@ import excel "temp_main.xlsx", sheet("dataset") firstrow clear
 	rename englandtierb tierb
 	rename noindoormixing noindoormix
 	rename nooutdoormixing nooutmix
+	rename lacode onscode
 
 	* create a date function (to allow for averages later)
 	gen date = mdy(month,dayofmonth,2020)
@@ -69,53 +70,59 @@ import excel "temp_main.xlsx", sheet("dataset") firstrow clear
 		bysort date: egen sd_socialdistancing = sd(socialdistancing)
 		tab sd_socialdistancing
 		bysort onscode: egen total_days_sociald = total(socialdistancing)
-		tab total_days_sociald
+		tab laname total_days_sociald
 
 	**Primary 
 		bysort onscode: egen total_days_closed = total(primaryclosed)
-		tab total_days_closed
+		tab laname total_days_closed
 	
 	**Secondary School Closures	
 		bysort onscode: egen total_days_secondary = total(secondaryclosed)
-		tab total_days_secondary
+		tab laname total_days_secondary
 
 	**Hospitality Shutdown
 		bysort onscode: egen total_days_hosp = total(hospitalityshut)
-		tab total_days_hosp
+		tab laname total_days_hosp
+		tab laname to
+		tab date hospitalityshut
 
 	**Retail Shutdown
 		bysort onscode: egen total_days_retail = total(retailshut)
-		tab total_days_retail
+		tab laname total_days_retail
 
 	**Tier A 
-		bysort date: egen sd_tiera = sd(tiera)
-		tab sd_tiera
+		tab laname tiera
 	
 	**Tier B 
-		bysort date: egen sd_tierb = sd(tierb)
-		tab sd_tierb
-	
+		tab laname tierb
+		
 //Reveals that social distancing, primary, secondary hospitality had very little national variation. Just retail shutdown, tier a and tier b. Not using tiers as a weighting factor as it disguses national trends. Not possible or neccessary to build a total score.
 
-**# Creating Quintiles 
+	**From lockdown dataset information Tier A and Tier B were a concurrent scheme. Verified below 
+	tab date tiera
+	tab date tierb
+	
+	**Tier A runs 14th of October - 4th November and Tier B runs 2nd December to 1st of Jan. They are therefore combined into one tier variable 
+	
+	*  combine the tiers at the daily level
+	* combine the tiers at the daily level
+	egen tier = rowfirst(tiera tierb)
 
+	* make explicit day-count flag (only counts if tier is genuinely 0/1)
+
+	** Collapse using to capture the total cumulative duration x severity
+	collapse (sum) total_retail = retailshut ///
+			 (sum) total_tier = tier, by(onscode laname regioncode)		  
+	
+	* quintiles
+	xtile tier_quintile   = total_tier, nquantiles(5)
+	xtile retail_quintile = total_retail, nquantiles(5)
+		
 		//Hospitality dropped: diagnostic showed near-zero cross-LA variation
 		//Retail retained as sole Complacency proxy - confirmed genuine local variation.
 		//Note: Convenience (primary/secondary school closures) dropped entirely. Diagnostic showed 99.34% of LAs identical on both total_days_closed (72 days) and total_days_secondary (86 days) - closures were applied near-nationally
 		
-		**From lockdown dataset information Tier A and Tier B were a 		concurrent scheme. Verified below 
-		gen daily_tier = 0
-		replace daily_tier = tiera if !missing(tiera)
-		replace daily_tier = tierb if !missing(tierb)
-
-	** Collapse using to capture the total cumulative duration x 		severity
-	collapse (sum) total_retail = retailshut ///
-			 (sum) total_tier = daily_tier, by(onscode laname regioncode)		  
-
-	xtile tier_quintile   = total_tier, nquantiles(5)
-	xtile retail_quintile = total_retail, nquantiles(5)
-		
-		
+	
 	* Drop specific areas not reflected in Vaccine Data 
 	drop if inlist(onscode, "E06000017", "E06000053", "E09000001", "E07000188")
 	sort laname
