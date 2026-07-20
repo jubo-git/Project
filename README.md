@@ -1,6 +1,6 @@
 This is a continually updated folder for my Project: Using Difference-in-Difference (DiD) to evaluate whether English local authorities that experienced more stringent lockdown restrictions during the 2020 COVID-19 pandemic have experienced a differential drop in MMR1 and MMR2 uptake in 2021 - 2025.
 
-*** My STATA liscence has been revoked. I am in the process of getting it renewed but I have not been able to open do-files and copy it over. You should still be able to view it ***
+*** My STATA liscence has been revoked. I am in the process of getting it renewed but I have not been able to open do-files and update some of the models (new notation) and testings. You should still be able to view it ***
 
 0. data_raw_excel: This has all the raw excel files that will be aggregated for the dataset. The COVER folder has all the vaccination data from NHS England, Lockdown data from the Insititue for Fiscal Stidues: 
 https://ifs.org.uk/internal-datasets/covid-19-restrictions-dataset and NOMIS data for deprivation, ns-sec and religion. 
