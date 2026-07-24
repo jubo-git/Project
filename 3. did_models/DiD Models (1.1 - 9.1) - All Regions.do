@@ -1,6 +1,8 @@
 **#0 GitHub Setup
 use "https://raw.githubusercontent.com/jubo-git/Project/main/data_clean/Lockdown_MMR_NOMIS.dta"
 
+xtreg dtp_24m c.total_tier##i.post, fe vce(cluster onscode)
+xtreg mmr1_24m c.total_tier##i.post, fe vce(cluster onscode)
 
 	**Basic DiD -  There is not "indivual" vaccine measurements, rather they are aggregated by coverage at the Local Authority level. The variables (NOMIS measures) vary exclusively at this level, there is therefore no mixture of group and invidual data. Therefore the regression model is adjusted for group level serial correlation over time using the vce(cluster onscode function
 
@@ -11,12 +13,12 @@ use "https://raw.githubusercontent.com/jubo-git/Project/main/data_clean/Lockdown
 	xtreg mmr1_24m c.tierdays_a##post, fe vce(cluster onscode)
 
 	**Model 1.2: Cluster OLS
-	regress mmr1_24m i.tieraquintile##post, vce(cluster onscode)
-	margins tieraquintile#post
+	regress mmr1_24m i.total_tier##post, vce(cluster ons_id)
+	margins total_tier#post
 	marginsplot, xdimension(post)
 
 	**Model 1.3: Cluster with fixed effects
-	xtreg mmr1_24m i.tieraquintile##post, fe vce(cluster onscode)
+	xtreg mmr1_24m i.total_tier##post, fe vce(cluster onscode)
 
 
 	**Model 1.4: With NOMIS Controls
@@ -25,11 +27,11 @@ use "https://raw.githubusercontent.com/jubo-git/Project/main/data_clean/Lockdown
 	//dropped asianasianbritishorasianwe due to high vif
 	//Need to find time-dependent NOMIS results. Not census data
 
-	regress mmr1_24m i.tieraquintile##post blackblackbritishblackwels otherethnicgroup householdisdeprivedinonedim householdisdeprivedinthreed householdisdeprivedinfourdi christian buddhist hindu jewish muslim sikh otherreligion, vce(cluster ons_id)
+	regress mmr1_24m i.total_tier##post blackblackbritishblackwels otherethnicgroup householdisdeprivedinonedim householdisdeprivedinthreed householdisdeprivedinfourdi christian buddhist hindu jewish muslim sikh otherreligion, vce(cluster ons_id)
 	estat vif
 
 	**Test model: I think London (most of Tier 3 is skewing the results). Will control for region 
-		xtreg mmr1_24m i.tieraquintile##post, fe vce(cluster onscode)
+		xtreg mmr1_24m i.total_tier##post, fe vce(cluster onscode)
 	
 **#2 Confidence - Tier A: MMR1 at 5 years
 
@@ -37,17 +39,17 @@ use "https://raw.githubusercontent.com/jubo-git/Project/main/data_clean/Lockdown
 	xtreg mmr1_5y c.tierdays_a##post, fe vce(cluster onscode)
 
 	**Model 2.2: Cluster OLS
-	regress mmr1_5y i.tieraquintile##post, vce(cluster onscode)
-	margins tieraquintile#post
+	regress mmr1_5y i.total_tier##post, vce(cluster onscode)
+	margins total_tier#post
 	marginsplot, xdimension(post)
 
 	**Model 2.3: Cluster with fixed effects
-	xtreg mmr1_5y i.tieraquintile##post, fe vce(cluster onscode)
-	margins tieraquintile#post
+	xtreg mmr1_5y i.total_tier##post, fe vce(cluster onscode)
+	margins total_tier#post
 	marginsplot, xdimension(post)
 
 	**Model 2.4: With NOMIS Controls
-	regress mmr1_5y i.tieraquintile##post blackblackbritishblackwels otherethnicgroup householdisdeprivedinonedim householdisdeprivedinthreed householdisdeprivedinfourdi christian buddhist hindu jewish muslim sikh otherreligion, vce(cluster ons_id)
+	regress mmr1_5y i.total_tier##post blackblackbritishblackwels otherethnicgroup householdisdeprivedinonedim householdisdeprivedinthreed householdisdeprivedinfourdi christian buddhist hindu jewish muslim sikh otherreligion, vce(cluster ons_id)
 	estat vif
 
 
@@ -57,17 +59,17 @@ use "https://raw.githubusercontent.com/jubo-git/Project/main/data_clean/Lockdown
 	xtreg mmr2_5y c.tierdays_a##post, fe vce(cluster onscode)
 
 	**Model 3.2: Cluster OLS
-	regress mmr2_5y i.tieraquintile##post, vce(cluster onscode)
-	margins tieraquintile#post
+	regress mmr2_5y i.total_tier##post, vce(cluster onscode)
+	margins total_tier#post
 	marginsplot, xdimension(post)
 
 	**Model 3.3: Cluster with fixed effects
-	xtreg mmr2_5y i.tieraquintile##post, fe vce(cluster onscode)
-	margins tieraquintile#post
+	xtreg mmr2_5y i.total_tier##post, fe vce(cluster onscode)
+	margins total_tier#post
 	marginsplot, xdimension(post)
 
 	**Model 3.4: With NOMIS Controls
-	regress mmr2_5y i.tieraquintile##post blackblackbritishblackwels otherethnicgroup householdisdeprivedinonedim householdisdeprivedinthreed householdisdeprivedinfourdi christian buddhist hindu jewish muslim sikh otherreligion, vce(cluster ons_id)
+	regress mmr2_5y i.total_tier##post blackblackbritishblackwels otherethnicgroup householdisdeprivedinonedim householdisdeprivedinthreed householdisdeprivedinfourdi christian buddhist hindu jewish muslim sikh otherreligion, vce(cluster ons_id)
 	estat vif
 
 
