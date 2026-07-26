@@ -37,7 +37,8 @@ import excel "temp_main.xlsx", sheet("dataset") firstrow clear
 	"E11000001", "E11000002", "E11000003" /// /Great Manchester, Merseyside, South Yorkshire,
 	"E11000005", "E11000006", /// West Midlands, Tyne and Wear,
 	"E11000007", "E13000001", "E13000002") //  Inner London, Outer London 
-
+	replace onscode = countycode if missing(onscode)
+	
 		**sorting date to be reflective of actual restriction timeline 
 	drop if date >= td(01jan2020) & date <= td(21mar2020) //When COVID started nothing of value in this period 
 	
@@ -134,8 +135,6 @@ import excel "temp_main.xlsx", sheet("dataset") firstrow clear
 		gen days_tier3 = (tier == 3)
 		gen days_tier4 = (tier == 4)
 		
-	cd "C:\Users\44799\OneDrive - MMU\03 DISSERTATION\GITHUB\
-	use "2. data_clean\duplicate_check.dta", clear
 		
 *Accounts for all the sub-districts thatr don't match vaccine data and have no extra data
 	collapse (max) tier days_tier1 days_tier2 days_tier3 days_tier4 retailshut, by(onscode date)
@@ -160,7 +159,6 @@ import excel "temp_main.xlsx", sheet("dataset") firstrow clear
 	
 	* Drop specific areas not reflected in Vaccine Data 
 	drop if inlist(onscode, "E06000017", "E06000053", "E09000001", "E07000188")
-	sort laname
 	//cd "C:\Users\44799\OneDrive - MMU\03 DISSERTATION\GITHUB\"
 	save "2. data_clean\lockdown_dataset.dta", replace
 

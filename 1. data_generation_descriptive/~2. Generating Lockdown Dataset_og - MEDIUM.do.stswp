@@ -1,0 +1,176 @@
+**#1 Processing Lockdown Data to be Comp. with Vaccine Data
+** import ALL raw lockdown data from the public web repository
+local repo "https://raw.githubusercontent.com/jubo-git/Project/main/0.%20data_raw_excel"
+copy "`repo'/Lockdown%20Data/Covid-local-restrictions-dataset.xlsx" "temp_main.xlsx", replace
+import excel "temp_main.xlsx", sheet("dataset") firstrow clear
+
+cd "C:\Users\44799\OneDrive - MMU\03 DISSERTATION\GITHUB"
+use "2. data_clean\lockdown_raw_data.dta", clear
+
+** Tidying (generic and making variables more streamlined)
+
+	* maintain english data only 
+	drop Scotlandtier
+	drop if Country !="England"
+
+	rename *, lower
+	rename englandtiera tiera
+	rename englandtierb tierb
+	rename noindoormixing noindoormix
+	rename nooutdoormixing nooutmix
+	rename lacode onscode
+
+	* create a date function (to allow for averages later)
+	gen date = mdy(month,dayofmonth,2020)
+	format date %td
+	label variable date "Date of Restriction"
+	drop month dayofmonth 
+	drop if date >= td(01jan2020) & date <= td(21mar2020) //When COVID started nothing of value in this period 
+	preserve
+	keep if date == td(31dec2020) //*Duplicate Dec 31 rows 5 additional times 
+	/// (creates 6 identical rows total per LA)
+	expand 6
+	by laname, sort: gen new_date = td(31dec2020) + _n - 1
+	format new_date %td
+
+	* Replace original date variable and save as temporary file
+	drop date
+	rename new_date date
+	tempfile jan_extension
+	save `jan_extension'
+
+	* Restore original data, remove Dec 31 to prevent duplicate keys, and append extension
+	restore
+	drop if date == td(31dec2020)
+	append using `jan_extension'
+	sort laname date
+	
+	* need to rename LOCKDOWN data E10000002 to E06000060 as code changed in 2021
+	replace onscode = "E06000060" if onscode == "E10000002"
+	replace onscode = "E06000065" if onscode == "E10000023"
+	replace onscode = "E06000066" if onscode == "E10000027"
+	
+** COMBINING LOCAL AUTHORITY DATA
+	replace onscode = countycode if inlist(onscode, ///
+	"E11000001", "E11000002", "E11000003", /// /Great Manchester, Merseyside, South Yorkshire,
+	"E11000005", "E11000006", /// West Midlands, Tyne and Wear,
+	"E11000007", "E13000001", "E13000002") //  Inner London, Outer London 
+	replace onscode = countycode if missing(onscode)
+	
+	replace onscode = "" if inlist(onscode, "E11000001", "E11000002", "E11000003")
+	replace onscode = "" if inlist(onscode, "E11000005", "E11000006", "E11000007")
+	replace onscode = "" if inlist(onscode, "E13000001", "E13000002")
+	replace onscode = onscode if onscode != ""
+	duplicates drop onscode date, force
+	
+	
+
+	* Renaming onscode (after sense checked in excel)
+	replace laname = "Buckinghamshire" if onscode == "E06000060"
+	replace laname = "Cambridgeshire" if onscode == "E10000003"
+	replace laname = "Cumbria" if onscode == "E10000006"
+	replace laname = "Derbyshire" if onscode == "E10000007"
+	replace laname = "Devon" if onscode == "E10000008"
+	replace laname = "East Sussex" if onscode == "E10000011"
+	replace laname = "Essex" if onscode == "E10000012"
+	replace laname = "Gloucestershire" if onscode == "E10000013"
+	replace laname = "Hampshire" if onscode == "E10000014"
+	replace laname = "Hertfordshire" if onscode == "E10000015"
+	replace laname = "Kent" if onscode == "E10000016"
+	replace laname = "Lancashire" if onscode == "E10000017"
+	replace laname = "Leicestershire" if onscode == "E10000018"
+	replace laname = "Lincolnshire" if onscode == "E10000019"
+	replace laname = "Norfolk" if onscode == "E10000020"
+	replace laname = "North Yorkshire" if onscode == "E10000023"
+	replace laname = "Northamptonshire" if onscode == "E10000021"
+	replace laname = "Nottinghamshire" if onscode == "E10000024"
+	replace laname = "Oxfordshire" if onscode == "E10000025"
+	replace laname = "Somerset" if onscode == "E10000027"
+	replace laname = "Staffordshire" if onscode == "E10000028"
+	replace laname = "Suffolk" if onscode == "E10000029"
+	replace laname = "Surrey" if onscode == "E10000030"
+	replace laname = "Warwickshire" if onscode == "E10000031"
+	replace laname = "West Sussex" if onscode == "E10000032"
+	replace laname = "Worcestershire" if onscode == "E10000034"
+	
+	**Note this creates duplications that need to be resolved 
+	
+**# Diagnostic before defining variables 
+
+	**Social Distancing 
+		bysort date: egen sd_socialdistancing = sd(socialdistancing)
+		tab sd_socialdistancing
+		bysort onscode: egen total_days_sociald = total(socialdistancing)
+		tab total_days_sociald
+
+	**Primary 
+		bysort onscode: egen total_days_closed = total(primaryclosed)
+		tab total_days_closed
+	
+	**Secondary School Closures	
+		bysort onscode: egen total_days_secondary = total(secondaryclosed)
+		tab total_days_secondary
+
+	**Hospitality Shutdown
+		bysort onscode: egen total_days_hosp = total(hospitalityshut)
+		tab total_days_hosp
+
+	**Retail Shutdown
+		bysort onscode: egen total_days_retail = total(retailshut)
+		tab total_days_retail
+
+	**Tier A 
+		bysort date: egen sd_tiera = sd(tiera)
+		tab sd_tiera
+	
+	**Tier B 
+		bysort date: egen sd_tierb = sd(tierb)
+		tab sd_tierb
+	
+//Reveals that social distancing, primary, secondary hospitality had very little national variation. Just retail shutdown, tier a and tier b. Not using tiers as a weighting factor as it disguses national trends. Not possible or neccessary to build a total score.
+
+	**From lockdown dataset information Tier A and Tier B were a concurrent scheme. Verified below 
+	tab date tiera
+	tab date tierb
+	
+	**Tier A runs 14th of October - 4th November and Tier B runs 2nd December to 1st of Jan. They are therefore combined into one tier variable 
+	
+	* combine the tiers at the daily level
+	* combine the tiers at the daily level
+	egen tier = rowfirst(tiera tierb)
+	tab laname tier // verify reflects lockdown timelines
+
+	* Per Tier Daily Count (BINARY)
+		gen days_tier1 = (tier == 1)
+		gen days_tier2 = (tier == 2)
+		gen days_tier3 = (tier == 3)
+		gen days_tier4 = (tier == 4)
+
+		
+	**Intermediate collapse to get rid of duplicates 
+	collapse (max) tier days_tier1 days_tier2 days_tier3 days_tier4 retailshut, by(onscode date)
+	
+	** Collapse using to capture the total cumulative duration x severity
+	collapse (sum) total_tier1 = days_tier1 ///
+			 (sum) total_tier2 = days_tier2 ///
+			 (sum) total_tier3 = days_tier3 ///
+			 (sum) total_tier4 = days_tier4 ///
+			 (sum) total_tier = tier ///
+			 (sum) total_retail = retailshut, by(onscode)
+  
+	
+	* quintiles
+	xtile tier_quintile   = total_tier, nquantiles(5)
+	xtile retail_quintile = total_retail, nquantiles(5)
+		
+		//Hospitality dropped: diagnostic showed near-zero cross-LA variation
+		//Retail retained as sole Complacency proxy - confirmed genuine local variation.
+		//Note: Convenience (primary/secondary school closures) dropped entirely. Diagnostic showed 99.34% of LAs identical on both total_days_closed (72 days) and total_days_secondary (86 days) - closures were applied near-nationally
+		
+	
+	* Drop specific areas not reflected in Vaccine Data 
+	drop if inlist(onscode, "E06000017", "E06000053", "E09000001", "E07000188")
+	sort laname
+	//cd "C:\Users\44799\OneDrive - MMU\03 DISSERTATION\GITHUB\"
+	save "2. data_clean\lockdown_dataset_medium.dta", replace
+

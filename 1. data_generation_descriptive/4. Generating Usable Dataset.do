@@ -1,5 +1,5 @@
 **#4 Creating Usable Dataset 
-// cd "C:\Users\44799\OneDrive - MMU\03 DISSERTATION\GITHUB\"
+cd "C:\Users\44799\OneDrive - MMU\03 DISSERTATION\GITHUB\"
 
 clear
 use "2. data_clean\final_combined_vaccine_dataset.dta"
