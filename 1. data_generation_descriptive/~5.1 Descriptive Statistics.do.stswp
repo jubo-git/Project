@@ -1,3 +1,5 @@
+use "https://raw.githubusercontent.com/jubo-git/Project/main/2.%20data_clean/full_dataset.dta", clear
+
 **# 1.4.1 Treatment Indicators & Quintiles (Time-Invariant LA Level: N = 314)
 
 preserve

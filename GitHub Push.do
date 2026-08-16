@@ -7,6 +7,6 @@ cd "C:\Users\44799\OneDrive - MMU\03 DISSERTATION\GITHUB"
 
 !git pull
 !git add .
-!git commit -m "Second duplicate correction try"
+!git commit -m "Updating Quintiles to Quartiles"
 !git push -u origin main
 

@@ -159,9 +159,9 @@ import excel "temp_main.xlsx", sheet("dataset") firstrow clear
 			 (sum) total_retail = retailshut, by(onscode)
   
 	
-	* quintiles
-	xtile tier_quintile   = total_tier, nquantiles(5)
-	xtile retail_quintile = total_retail, nquantiles(5)
+	* quartiles (there is not enough for 5)
+	xtile tier_quartile   = total_tier, nquantiles(4)
+	xtile retail_quartile = total_retail, nquantiles(4)
 		
 		//Hospitality dropped: diagnostic showed near-zero cross-LA variation
 		//Retail retained as sole Complacency proxy - confirmed genuine local variation.
