@@ -7,6 +7,6 @@ cd "C:\Users\44799\OneDrive - MMU\03 DISSERTATION\GITHUB"
 
 !git pull
 !git add .
-!git commit -m "Checking Upload"
+!git commit -m "Checking Upload v1.1"
 !git push -u origin main
 
