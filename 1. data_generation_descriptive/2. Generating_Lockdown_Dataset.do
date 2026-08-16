@@ -4,9 +4,6 @@ local repo "https://raw.githubusercontent.com/jubo-git/Project/main/0.%20data_ra
 copy "`repo'/Lockdown%20Data/Covid-local-restrictions-dataset.xlsx" "temp_main.xlsx", replace
 import excel "temp_main.xlsx", sheet("dataset") firstrow clear
 
-cd "C:\Users\44799\OneDrive - MMU\03 DISSERTATION\GITHUB"
-use "2. data_clean\lockdown_raw_data.dta", clear
-
 ** Tidying (generic and making variables more streamlined)
 
 	* maintain english data only 
@@ -46,21 +43,24 @@ use "2. data_clean\lockdown_raw_data.dta", clear
 	sort laname date
 	
 	* need to rename LOCKDOWN data E10000002 to E06000060 as code changed in 2021
-	replace onscode = "E06000060" if onscode == "E10000002"
-	replace onscode = "E06000065" if onscode == "E10000023"
-	replace onscode = "E06000066" if onscode == "E10000027"
+	replace onscode = "E06000060" if onscode == "E10000002" // Buckinhamshire code change 
+	replace onscode = "E06000065" if onscode == "E10000023" // North Yorkshire code change 
+	replace onscode = "E06000066" if onscode == "E10000027" // Somerset code change
 	
 ** COMBINING LOCAL AUTHORITY DATA
+	* combined/metropolitan authorities & London: onscode holds a shared code that
+	* needs swapping for the LA-specific county code
+	
 	replace onscode = countycode if inlist(onscode, ///
 	"E11000001", "E11000002", "E11000003", /// /Great Manchester, Merseyside, South Yorkshire,
 	"E11000005", "E11000006", /// West Midlands, Tyne and Wear,
 	"E11000007", "E13000001", "E13000002") //  Inner London, Outer London 
-	replace onscode = countycode if missing(onscode)
 	
-	replace onscode = "" if inlist(onscode, "E11000001", "E11000002", "E11000003")
-	replace onscode = "" if inlist(onscode, "E11000005", "E11000006", "E11000007")
-	replace onscode = "" if inlist(onscode, "E13000001", "E13000002")
-	replace onscode = onscode if onscode != ""
+	* unitary authorities: onscode is blank in the raw data, fall back to county code
+	replace onscode = countycode if missing(onscode)
+
+	* shire counties still have one row per district sharing the same onscode/date -
+	* collapse them below (max, since values are identical within a county-date)
 	duplicates drop onscode date, force
 	
 	
@@ -172,4 +172,3 @@ use "2. data_clean\lockdown_raw_data.dta", clear
 	drop if inlist(onscode, "E06000017", "E06000053", "E09000001", "E07000188")
 	//cd "C:\Users\44799\OneDrive - MMU\03 DISSERTATION\GITHUB\"
 	save "2. data_clean\lockdown_dataset_medium.dta", replace
-

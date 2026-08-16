@@ -7,33 +7,30 @@ use "https://raw.githubusercontent.com/jubo-git/Project/main/2.%20data_clean/ful
 
 
 **# dtp_12m
-	reg dtp_12m c.total_tier##ib2019.year, vce(cluster onscode)
-	reg dtp_12m c.total_retail##ib2019.year, vce(cluster onscode)
+	reg dtp_12m c.total_tier##ib2019.year, fe vce(cluster onscode)
 
 **# dtp_24m
-	reg dtp_24m c.total_tier##ib2019.year, vce(cluster onscode)
-	reg dtp_24m c.total_retail##ib2019.year, vce(cluster onscode)
+	reg dtp_24m c.total_tier##ib2019.year, fe vce(cluster onscode)
+
 
 **# mmr1_24m
 	//reg mmr1_24m c.total_days_tier##ib2019.year, vce(cluster onscode)
-	reg mmr1_24m c.total_tier##ib2019.year, vce(cluster onscode)
-	reg mmr1_24m c.total_retail##ib2019.year, vce(cluster onscode)
+	reg mmr1_24m c.total_tier##ib2019.year, fe vce(cluster onscode)
 
 **# dtp_5y
-	reg dtp_5y c.total_tier##ib2019.year, vce(cluster onscode)
-	reg dtp_5y c.total_retail##ib2019.year, vce(cluster onscode)
+	reg dtp_5y c.total_tier##ib2019.year, fe vce(cluster onscode)
+
 
 **# dtp_boost_5y
-	reg dtp_boost_5y c.total_tier##ib2019.year, vce(cluster onscode)
-	reg dtp_boost_5y c.total_retail##ib2019.year, vce(cluster onscode)
+	reg dtp_boost_5y c.total_tier##ib2019.year, fe vce(cluster onscode)
+
 
 **# mmr1_5y
-	reg mmr1_5y c.total_tier##ib2019.year, vce(cluster onscode)
-	reg mmr1_5y c.total_retail##ib2019.year, vce(cluster onscode)
+	reg mmr1_5y c.total_tier##ib2019.year, fe vce(cluster onscode)
 
 **# mmr2_5y
-	reg mmr2_5y c.total_tier##ib2019.year, vce(cluster onscode)
-	reg mmr2_5y c.total_retail##ib2019.year, vce(cluster onscode)
+	reg mmr2_5y c.total_tier##ib2019.year, fe vce(cluster onscode)
+
 
 
 **# PARALLEL PLOTS BY QUINTILE — grouped by outcome variable

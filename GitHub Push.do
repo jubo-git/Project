@@ -7,6 +7,6 @@ cd "C:\Users\44799\OneDrive - MMU\03 DISSERTATION\GITHUB"
 
 !git pull
 !git add .
-!git commit -m "Ensuring Duplicates and Bpundary Changes have not disrupted data: COME BACK TO HERE IF NEEDED"
+!git commit -m "Second duplicate correction try"
 !git push -u origin main
 
