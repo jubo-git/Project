@@ -5,6 +5,7 @@ use "https://raw.githubusercontent.com/jubo-git/Project/main/2.%20data_clean/ful
 xtset ons_id year
 
 **# Quick Access: Primary Continuous cDiD Specifications
+	//xtreg [outcome] c.total_tier#i.post i.year, fe vce(cluster onscode)
 	xtreg dtp_12m c.total_tier#i.post i.year, fe vce(cluster onscode)
 	xtreg dtp_24m c.total_tier#i.post i.year, fe vce(cluster onscode)
 	xtreg mmr1_24m c.total_tier#i.post i.year, fe vce(cluster onscode)
