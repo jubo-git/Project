@@ -387,6 +387,7 @@ copy "`repo'/2017-18-child-vacc-stat-eng-tab.xlsx" "temp_2017_18.xlsx", replace
 		rename B laname
 		rename F dtp_24m
 		rename G mmr1_24m
+		destring mmr1_24m, replace force
 		keep onscode laname dtp_24m mmr1_24m
 		drop if missing(onscode) | onscode == "ONS Code"
 		tempfile data24m_18
@@ -709,6 +710,7 @@ capture erase "temp_2020_21.xlsx"
 capture erase "temp_2019_20.xlsx"
 capture erase "temp_2018_19.xlsx"
 capture erase "temp_2017_18.xlsx"
+capture erase "temp_2016_17.xlsx"
 capture erase "temp_2015_16.xlsx"
 capture erase "temp_2014_15.xlsx"
 capture erase "temp_2013_14.xlsx"

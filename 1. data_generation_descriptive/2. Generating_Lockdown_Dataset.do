@@ -161,7 +161,7 @@ import excel "temp_main.xlsx", sheet("dataset") firstrow clear
 	
 	* quartiles (there is not enough for 5)
 	xtile tier_quartile   = total_tier, nquantiles(4)
-	xtile retail_quartile = total_retail, nquantiles(4)
+
 		
 		//Hospitality dropped: diagnostic showed near-zero cross-LA variation
 		//Retail retained as sole Complacency proxy - confirmed genuine local variation.
@@ -172,3 +172,4 @@ import excel "temp_main.xlsx", sheet("dataset") firstrow clear
 	drop if inlist(onscode, "E06000017", "E06000053", "E09000001", "E07000188")
 	//cd "C:\Users\44799\OneDrive - MMU\03 DISSERTATION\GITHUB\"
 	save "2. data_clean\lockdown_dataset_medium.dta", replace
+

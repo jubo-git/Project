@@ -89,10 +89,8 @@ xtset ons_id year
 	estat vif
 
 
-********************************************************************************
-* 5. SENSITIVITY / ROBUSTNESS CHECK — Multi-Tier Model
+**# SENSITIVITY / ROBUSTNESS CHECK — Multi-Tier Model
 *    (Threshold Effects: Tiers 2/3/4 relative to Tier 1)
-********************************************************************************
 
 	**# Multi-Tier Model (Threshold Effects: Tiers 2/3/4 relative to Tier 1)
 	* Note: total_tier1 is omitted as the reference category to prevent collinearity.

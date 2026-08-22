@@ -3,7 +3,7 @@ cd "C:\Users\44799\OneDrive - MMU\03 DISSERTATION\GITHUB\"
 
 clear
 use "2. data_clean\final_combined_vaccine_dataset.dta"
-merge m:1 onscode using "2. data_clean/lockdown_dataset.dta", nogenerate
+merge m:1 onscode using "2. data_clean\lockdown_dataset_medium.dta", nogenerate
 
 
 	* Save intermediate file to clean data subfolder
