@@ -1,29 +1,38 @@
 use "https://raw.githubusercontent.com/jubo-git/Project/main/2.%20data_clean/full_dataset.dta", clear
 xtset ons_id year
 
-**# EVENT STUDIES — Grouped by Outcome Variable (Base Year = 2019)
+* 1. PREPARATION: Generate explicit year-specific interaction variables
+
+* Drops previous iterations if re-running
+cap drop tier_20* 
+
+forvalues y = 2014/2025 {
+    gen tier_`y' = total_tier * (year == `y')
+}
+
+* 2. EVENT STUDIES BY OUTCOME VARIABLE (Base Year = 2020)
+
 
 **# dtp_12m
-	xtreg dtp_12m c.total_tier#ib2019.year i.year, fe vce(cluster onscode)
+xtreg dtp_12m tier_2014-tier_2018 tier_2019-tier_2025 i.year, fe vce(cluster onscode)
 
 **# dtp_24m
-	xtreg dtp_24m c.total_tier#ib2019.year i.year, fe vce(cluster onscode)
+xtreg dtp_24m tier_2014-tier_2019 tier_2021-tier_2025 i.year, fe vce(cluster onscode)
 
 **# mmr1_24m
-	xtreg mmr1_24m c.total_tier#ib2019.year i.year, fe vce(cluster onscode)
+xtreg mmr1_24m tier_2014-tier_2019 tier_2021-tier_2025 i.year, fe vce(cluster onscode)
 
 **# dtp_5y
-	xtreg dtp_5y c.total_tier#ib2019.year i.year, fe vce(cluster onscode)
+xtreg dtp_5y tier_2014-tier_2019 tier_2021-tier_2025 i.year, fe vce(cluster onscode)
 
 **# dtp_boost_5y
-	xtreg dtp_boost_5y c.total_tier#ib2019.year i.year, fe vce(cluster onscode)
+xtreg dtp_boost_5y tier_2014-tier_2019 tier_2021-tier_2025 i.year, fe vce(cluster onscode)
 
 **# mmr1_5y
-	xtreg mmr1_5y c.total_tier#ib2019.year i.year, fe vce(cluster onscode)
+xtreg mmr1_5y tier_2014-tier_2019 tier_2021-tier_2025 i.year, fe vce(cluster onscode)
 
 **# mmr2_5y
-	xtreg mmr2_5y c.total_tier#ib2019.year i.year, fe vce(cluster onscode)
-
+xtreg mmr2_5y tier_2014-tier_2019 tier_2021-tier_2025 i.year, fe vce(cluster onscode)
 
 **# PARALLEL TREND PLOTS BY quartile — Grouped by Outcome Variable
 **# dtp_12m

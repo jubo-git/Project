@@ -5,11 +5,13 @@ use "https://raw.githubusercontent.com/jubo-git/Project/main/2.%20data_clean/ful
 
 preserve
     collapse (mean) total_tier tier_quartile total_tier1 total_tier2 total_tier3 total_tier4 ///
-                   retail_quartile, by(onscode)
+                  , by(onscode)
     
     tabstat total_tier total_tier1 total_tier2 total_tier3 total_tier4, ///
         stats(n mean sd p50 p25 p75 min max) columns(statistics) format(%9.2f)
-        
+       
+	   tabstat total_tier, by(tier_quartile) stats(min max n mean) format(%9.2f)
+	   
     tab tier_quartile
 restore
 
@@ -57,17 +59,46 @@ tabstat dtp_12m dtp_24m dtp_5y dtp_boost_5y mmr1_24m mmr1_5y mmr2_5y, ///
 	graph combine gr_dtp_12m gr_dtp_24m gr_dtp_5y gr_dtp_boost_5y gr_mmr1_24m gr_mmr1_5y gr_mmr2_5y, ///
 		cols(3) title("Distributions of Vaccine Uptake (Lowest % at 60%)")
 		
-**# 1.4.3	Baseline Demographics and Covariates (Census 2021)
+**# 1.4.3 Baseline Demographics and Covariates by Tier Exposure Quartile
 preserve
-    collapse (mean) asian_pct black_pct mixed_pct other_pct white_pct ///
-                    hh_deprived_1_pct hh_deprived_2_pct hh_deprived_3_pct hh_deprived_4_pct hh_deprived_0_pct christian_pct buddhist_pct hindu_pct jewish_pct muslim_pct sikh_pct              otherreligion_pct noreligion_pct notanswered, by(onscode)
+    * 1. Standardize demographic variables to Z-scores (National Mean = 0, SD = 1)
+    foreach var of varlist hh_deprived_0_pct hh_deprived_1_pct hh_deprived_2_pct hh_deprived_3_pct hh_deprived_4_pct ///
+                         christian_pct muslim_pct jewish_pct noreligion_pct {
+        egen z_`var' = std(`var')
+    }
 
-    tabstat asian_pct black_pct mixed_pct other_pct white_pct ///
-            hh_deprived_1_pct hh_deprived_2_pct hh_deprived_3_pct hh_deprived_4_pct hh_deprived_0_pct ///
-            christian_pct muslim_pct jewish_pct noreligion_pct, ///
-            stats(n mean sd p50 p25 p75 min max) columns(statistics) format(%9.2f)
+    * 2. Collapse to LA level by onscode (keeping LA-level Z-scores and tier_quartile)
+    collapse (mean) tier_quartile z_* , by(onscode)
+
+
+    * TABLE 1: HOUSEHOLD DEPRIVATION (Standardized SD Differences by Quartile)
+
+    tabstat z_hh_deprived_0_pct z_hh_deprived_1_pct z_hh_deprived_2_pct ///
+            z_hh_deprived_3_pct z_hh_deprived_4_pct, ///
+            by(tier_quartile) stats(mean n) format(%9.2f)
+
+preserve
+
+    * 1. Standardize all 8 demographic religion variables (National Mean = 0, SD = 1)
+preserve
+
+    * 1. Display raw overall sample means BEFORE collapse
+    tabstat christian_pct buddhist_pct hindu_pct jewish_pct muslim_pct sikh_pct otherreligion_pct noreligion_pct, ///
+            stats(mean) format(%9.2f)
+
+    * 2. Standardize all 8 religion variables to Z-scores (Mean = 0, SD = 1)
+    foreach var of varlist christian_pct buddhist_pct hindu_pct jewish_pct muslim_pct sikh_pct otherreligion_pct noreligion_pct {
+        egen z_`var' = std(`var')
+    }
+
+    * 3. Collapse to LA level by onscode (keeping LA-level Z-scores and tier_quartile)
+    collapse (mean) tier_quartile z_* , by(onscode)
+
+    * 4. Run tabstat across all 8 STANDARDIZED (z_) religion variables
+    tabstat z_christian_pct z_buddhist_pct z_hindu_pct z_jewish_pct z_muslim_pct z_sikh_pct z_otherreligion_pct z_noreligion_pct, ///
+            by(tier_quartile) stats(mean n) format(%9.2f)
+
 restore
-
 **# Bivariate
 
 *1. Summary of Demographic Shares across Tier Quintiles

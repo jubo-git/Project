@@ -7,6 +7,6 @@ cd "C:\Users\44799\OneDrive - MMU\03 DISSERTATION\GITHUB"
 
 !git pull
 !git add .
-!git commit -m "Checking Upload v1.2"
+!git commit -m "0 values in tiers to missing"
 !git push -u origin main
 
