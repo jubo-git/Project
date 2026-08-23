@@ -1,43 +1,35 @@
 use "https://raw.githubusercontent.com/jubo-git/Project/main/2.%20data_clean/full_dataset.dta", clear
 xtset ons_id year
 
-* 1. PREPARATION: Generate explicit year-specific interaction variables
-
-* Drops previous iterations if re-running
-cap drop tier_20* 
-
-forvalues y = 2015/2025 {
-    gen tier_`y' = total_tier * (year == `y')
-}
 
 * 2. EVENT STUDIES BY OUTCOME VARIABLE (Base Year = 2020)
-xtreg dtp_12m ib2020.year##c.total_tier, ///
+xtreg dtp_12m ib2019.year##c.total_tier, ///
     fe vce(cluster onscode)
 
 
 **# dtp_24m
-xtreg dtp_24m ib2020.year##c.total_tier, ///
+xtreg dtp_24m ib2019.year##c.total_tier, ///
     fe vce(cluster onscode)
 
 
 **# mmr1_24m
-xtreg mmr1_24m tib2020.year##c.total_tier, ///
+xtreg mmr1_24m ib2019.year##c.total_tier, ///
     fe vce(cluster onscode)
 
 **# dtp_5y
-xtreg dtp_5y ib2020.year##c.total_tier, ///
+xtreg dtp_5y ib2019.year##c.total_tier, ///
     fe vce(cluster onscode)
 
 **# dtp_boost_5y
-xtreg dtp_boost_5y ib2020.year##c.total_tier, ///
+xtreg dtp_boost_5y ib2019.year##c.total_tier, ///
     fe vce(cluster onscode)
 
 **# mmr1_5y
-xtreg mmr1_5y ib2020.year##c.total_tier, ///
+xtreg mmr1_5y ib2019.year##c.total_tier, ///
     fe vce(cluster onscode)
 
 **# mmr2_5y
-xtreg mmr2_5y ib2020.year##c.total_tier, ///
+xtreg mmr2_5y ib2019.year##c.total_tier, ///
     fe vce(cluster onscode)
 
 
