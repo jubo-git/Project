@@ -158,6 +158,7 @@ import excel "temp_main.xlsx", sheet("dataset") firstrow clear
 			 (sum) total_tier = tier ///
 			 (sum) total_retail = retailshut, by(onscode)
   
+  recode total_tier1 total_tier2 total_tier3 total_tier4 (0 = .)
 	
 	* quartiles (there is not enough for 5)
 	xtile tier_quartile   = total_tier, nquantiles(4)
@@ -170,6 +171,6 @@ import excel "temp_main.xlsx", sheet("dataset") firstrow clear
 	
 	* Drop specific areas not reflected in Vaccine Data 
 	drop if inlist(onscode, "E06000017", "E06000053", "E09000001", "E07000188")
-	//cd "C:\Users\44799\OneDrive - MMU\03 DISSERTATION\GITHUB\"
+	cd "C:\Users\44799\OneDrive - MMU\03 DISSERTATION\GITHUB\"
 	save "2. data_clean\lockdown_dataset_medium.dta", replace
 

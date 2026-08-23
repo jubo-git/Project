@@ -25,7 +25,7 @@ merge m:1 onscode using "2. data_clean/nomis_dataset.dta"
 	**Prepare for DiD analysis by encoding ONS, generating post variable and outlining panel data 
 	encode onscode, gen(ons_id)
 	destring year, replace
-	gen post = (year >= 2020)
+	gen post = (year >= 2021)
 	xtset ons_id year
 	
 	**Inspecting missing values 

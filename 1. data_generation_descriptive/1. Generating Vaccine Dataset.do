@@ -571,58 +571,6 @@ copy "`repo'/2014-15-nhs-immu-stat-eng-tab.xlsx" "temp_2014_15.xlsx", replace
 		tempfile master_2015
 		save "`master_2015'", replace
 
-**# 2013 - 14
-local repo "https://raw.githubusercontent.com/jubo-git/Project/main/0.%20data_raw_excel/COVER%20Data"
-copy "`repo'/2013-14-nhs-immu-stat-eng-tab-exc.xlsx" "temp_2013_14.xlsx", replace
-
-		*Table 10a [B23: G195] (6in1_12m)
-		import excel "temp_2013_14.xlsx", sheet("Table 10a") cellrange(A23:F195) clear
-		drop D E 
-		rename C onscode
-		rename B laname
-		rename F dtp_12m
-		rename A region
-		keep onscode laname region dtp_12m
-		drop if missing(onscode) | onscode == "ONS Code"
-		tempfile data12m_14
-		save "`data12m_14'"
-
-		*Table 11a [B22: I194] (6in1_24m & mmr1_24m)
-		import excel "temp_2013_14.xlsx", sheet("Table 11a") cellrange(A22:G194) clear
-		drop D E
-		rename C onscode
-		rename B laname
-		rename F dtp_24m
-		rename G mmr1_24m
-		keep onscode laname dtp_24m mmr1_24m
-		drop if missing(onscode) | onscode == "ONS Code"
-		tempfile data24m_14
-		save "`data24m_14'"
-
-		*Table 12a [B23: I195] (6in1_5y & booster & mmr1_5y & mmr2_5y)
-		import excel "temp_2013_14.xlsx", sheet("Table 12a") cellrange(A23:I195) clear
-		drop D E
-		rename C onscode
-		rename B laname
-		rename F dtp_boost_5y
-		rename G dtp_5y
-		rename H mmr1_5y
-		rename I mmr2_5y
-		keep onscode laname dtp_5y dtp_boost_5y mmr1_5y mmr2_5y
-		drop if missing(onscode) | onscode == "ONS Code"
-		tempfile data5y_14
-		save "`data5y_14'"
-
-		*Merge all temp files to create 2014 dataset 
-		use "`data12m_14'", clear
-		merge 1:1 onscode using "`data24m_14'", nogenerate
-		merge 1:1 onscode using "`data5y_14'", nogenerate
-		gen year = "2014"
-		destring dtp_boost_5y dtp_5y, replace force
-		
-		tempfile master_2014
-		save "`master_2014'", replace
-	
 
 **# Master Vaccine Dataset 
 
@@ -638,7 +586,6 @@ use "`master_2025'", clear
 	append using "`master_2017'"
 	append using "`master_2016'"
 	append using "`master_2015'"
-	append using "`master_2014'"
 
 *Mid-Point Save 
 *Save 
