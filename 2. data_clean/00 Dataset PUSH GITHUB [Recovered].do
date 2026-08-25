@@ -1,5 +1,5 @@
 **# 0 GitHub Saving
-cd "C:\Users\25943553\OneDrive - MMU\03 DISSERTATION\STATA\DiD"
+//cd "C:\Users\25943553\OneDrive - MMU\03 DISSERTATION\STATA\DiD"
 cd "C:\Users\44799\OneDrive - MMU\03 DISSERTATION\GITHUB"
 
 !git init
@@ -7,6 +7,6 @@ cd "C:\Users\44799\OneDrive - MMU\03 DISSERTATION\GITHUB"
 
 !git pull
 !git add .
-!git commit -m "Ensuring dataset is aligned"
+!git commit -m "Adding back in 2014"
 !git push -u origin main
 
