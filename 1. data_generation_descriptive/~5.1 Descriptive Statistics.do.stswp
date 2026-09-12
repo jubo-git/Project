@@ -1,13 +1,12 @@
-
+```stata
 use "https://raw.githubusercontent.com/jubo-git/Project/main/2.%20data_clean/full_dataset.dta", clear 
  
-**# 1.4.1 Treatment Indicators & Quartiles (Time-Invariant LA Level: N = 314) 
+**# 1.4.1 Treatment Indicator & Quartiles (Time-Invariant LA Level: N = 314) 
  
 preserve 
-    collapse (mean) total_tier tier_quartile total_tier2 total_tier3 total_tier4 ///
-                  , by(onscode) 
+    collapse (mean) total_tier tier_quartile, by(onscode) 
      
-    tabstat total_tier total_tier2 total_tier3 total_tier4, ///
+    tabstat total_tier, ///
         stats(n mean sd p50 p25 p75 min max) columns(statistics) format(%9.2f) 
         
     tabstat total_tier, by(tier_quartile) stats(min max n mean) format(%9.2f) 
@@ -17,27 +16,14 @@ restore
  
 preserve 
     * Collapse to LA level 
-    collapse (mean) total_tier tier_quartile total_tier2 total_tier3 total_tier4 ///
-                   , by(onscode) 
+    collapse (mean) total_tier tier_quartile, by(onscode) 
  
-    * 1. Cumulative Tier Score (Composite Index) 
+    * Cumulative Tier Score (Composite Index) 
     histogram total_tier, percent ///
         title("total_tier", size(small)) ///
         xtitle("Composite Tier Index") ///
         name(gr_total_tier, replace) 
  
-    * 2. Individual Tier Days (Calendar Days) 
-    local day_vars total_tier2 total_tier3 total_tier4 
-    foreach var of local day_vars { 
-        histogram `var', percent ///
-            title("`var'", size(small)) ///
-            xtitle("Days") ///
-            name(gr_`var', replace) 
-    } 
- 
-    * Combine into grid 
-    graph combine gr_total_tier gr_total_tier2 gr_total_tier3 gr_total_tier4, ///
-        cols(3) title("Distributions of Exposure Index & Restriction Days Across LAs") 
 restore 
  
 **# 1.4.2 Vaccination Uptake across LAs (MMR and Hexavalent) 
@@ -84,9 +70,6 @@ preserve
             z_hh_deprived_3_pct z_hh_deprived_4_pct, ///
             by(tier_quartile) stats(mean n) format(%9.2f) 
  
-preserve 
- 
-    * 1. Standardize all 8 demographic religion variables (National Mean = 0, SD = 1) 
 preserve 
  
     * 1. Display raw overall sample means BEFORE collapse 
