@@ -411,7 +411,7 @@ copy "`repo'/2017-18-child-vacc-stat-eng-tab.xlsx" "temp_2017_18.xlsx", replace
 	rename F hex_2y
 	rename G mmr1_2y
 	rename H hib_men_boost_2y
-	destring mmr1_2y, replace force
+	destring mmr1_2y, replace ignore(":")
 	keep onscode laname hex_2y mmr1_2y hib_men_boost_2y
 	drop if missing(onscode) | onscode == "ONS Code"
 	tempfile data2y_18
@@ -437,6 +437,7 @@ copy "`repo'/2017-18-child-vacc-stat-eng-tab.xlsx" "temp_2017_18.xlsx", replace
 	merge 1:1 onscode using "`data2y_18'", nogenerate
 	merge 1:1 onscode using "`data5y_18'", nogenerate
 	gen year = "2018"
+	destring mmr1_2y, replace force
 	
 	tempfile master_2018
 	save "`master_2018'", replace
@@ -644,17 +645,20 @@ copy "`repo'/2013-14-nhs-immu-stat-eng-tab-exc.xlsx" "temp_2013_14.xlsx", replac
 	rename H mmr1_5y
 	rename I mmr2_5y
 	rename J hib_men_boost_5y
+	destring dtp_boost_5y, replace force
+	destring hex_5y, replace force
 	keep onscode laname hex_5y dtp_boost_5y mmr1_5y mmr2_5y hib_men_boost_5y
 	drop if missing(onscode) | onscode == "ONS Code"
 	tempfile data5y_14
 	save "`data5y_14'"
+	sort laname
 
 	*Merge all temp files to create 2014 dataset 
 	use "`data1y_14'", clear
 	merge 1:1 onscode using "`data2y_14'", nogenerate
 	merge 1:1 onscode using "`data5y_14'", nogenerate
 	gen year = "2014"
-	destring dtp_boost_5y hex_5y, replace force
+
 	
 	tempfile master_2014
 	save "`master_2014'", replace
