@@ -1,5 +1,6 @@
-
 use "https://raw.githubusercontent.com/jubo-git/Project/main/2.%20data_clean/full_dataset.dta", clear
+rename dtp_12m hex_12m
+
 
 **# 1.4.1 Treatment Indicators & Quintiles (Time-Invariant LA Level: N = 314)
 
@@ -11,7 +12,7 @@ preserve
         stats(n mean sd p50 p25 p75 min max) columns(statistics) format(%9.2f)
        
 	   tabstat total_tier, by(tier_quartile) stats(min max n mean) format(%9.2f)
-	   
+	   	   
     tab tier_quartile
 restore
 
@@ -27,7 +28,7 @@ preserve
         name(gr_total_tier, replace)
 
     * 2. Individual Tier Days (Calendar Days)
-    local day_vars total_tier1 total_tier2 total_tier3 total_tier4 total_retail
+    local day_vars total_tier1 total_tier2 total_tier3 total_tier4 
     foreach var of local day_vars {
         histogram `var', percent ///
             title("`var'", size(small)) ///
@@ -40,23 +41,28 @@ preserve
         cols(3) title("Distributions of Exposure Index & Restriction Days Across LAs")
 restore
 
-**# 1.4.2 Vaccination Uptake across LA's (MMR and Hexavalent)
-codebook mmr1_5y mmr2_5y dtp_12m dtp_24m mmr1_24m dtp_5y dtp_boost_5y
+**# 1.4.2 Vaccination Uptake across LA's (MMR, Hexavalent and Hib/MenC)
+codebook mmr1_5y mmr2_5y hex_12m hex_24m mmr1_24m dtp_5y dtp_boost_5y ///
+         hib_men_booster_2y hib_men_booster_5y
 
 recode dtp_5y dtp_boost_5y (0 = .)
 
-tabstat dtp_12m dtp_24m dtp_5y dtp_boost_5y mmr1_24m mmr1_5y mmr2_5y, ///
+tabstat hex_12m hex_24m dtp_5y dtp_boost_5y mmr1_24m mmr1_5y mmr2_5y ///
+        hib_men_booster_2y hib_men_booster_5y, ///
     stats(n mean sd p50 p25 p75 min max) columns(statistics) format(%9.2f)
 	
-	* Loop to generate individual histograms truncated at 60%
-	foreach var in dtp_12m dtp_24m dtp_5y dtp_boost_5y mmr1_24m mmr1_5y mmr2_5y {
+* Loop to generate individual histograms truncated at 60%
+foreach var in hex_12m hex_24m dtp_5y dtp_boost_5y mmr1_24m mmr1_5y mmr2_5y ///
+               hib_men_booster_2y hib_men_booster_5y {
 		histogram `var' if `var' >= 60, percent ///
 			xscale(range(60 100)) xlabel(60(10)100) ///
 			title("`var'", size(small)) name(gr_`var', replace)
 	}
 
-	* Combine into a single figure
-	graph combine gr_dtp_12m gr_dtp_24m gr_dtp_5y gr_dtp_boost_5y gr_mmr1_24m gr_mmr1_5y gr_mmr2_5y, ///
+* Combine into a single figure
+graph combine gr_hex_12m gr_hex_24m gr_dtp_5y gr_dtp_boost_5y ///
+              gr_mmr1_24m gr_mmr1_5y gr_mmr2_5y ///
+              gr_hib_men_booster_2y gr_hib_men_booster_5y, ///
 		cols(3) title("Distributions of Vaccine Uptake (Lowest % at 60%)")
 		
 **# 1.4.3 Baseline Demographics and Covariates by Tier Exposure Quartile
