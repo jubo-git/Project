@@ -639,8 +639,8 @@ copy "`repo'/2013-14-nhs-immu-stat-eng-tab-exc.xlsx" "temp_2013_14.xlsx", replac
 	drop D E
 	rename C onscode
 	rename B laname
-	rename F dtp_boost_5y
-	rename G hex_5y
+	rename F hex_5y
+	rename G dtp_boost_5y
 	rename H mmr1_5y
 	rename I mmr2_5y
 	rename J hib_men_boost_5y
