@@ -7,6 +7,6 @@ cd "C:\Users\44799\OneDrive - MMU\03 DISSERTATION\GITHUB"
 
 !git pull
 !git add .
-!git commit -m "New Data Final"
+!git commit -m "PLS FINAL 1 EVER"
 !git push -u origin main
 

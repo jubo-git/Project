@@ -1,4 +1,4 @@
-```stata
+
 use "https://raw.githubusercontent.com/jubo-git/Project/main/2.%20data_clean/full_dataset.dta", clear 
  
 **# 1.4.1 Treatment Indicator & Quartiles (Time-Invariant LA Level: N = 314) 
@@ -34,8 +34,8 @@ codebook hex_1y hex_2y mmr1_2y hib_men_boost_2y ///
 recode hex_1y hex_2y mmr1_2y hib_men_boost_2y ///
        hex_5y dtp_boost_5y mmr1_5y mmr2_5y hib_men_boost_5y (0 = .) 
  
-tabstat hex_1y hex_2y mmr1_2y hib_men_boost_2y ///
-        hex_5y dtp_boost_5y mmr1_5y mmr2_5y hib_men_boost_5y, ///
+tabstat hex_1y hex_2y hib_men_boost_2y hex_5y dtp_boost_5y hib_men_boost_5y ///
+        mmr1_2y  mmr1_5y mmr2_5y, ///
     stats(n mean sd p50 p25 p75 min max) columns(statistics) format(%9.2f) 
 	 
 * Loop to generate individual histograms truncated at 60% 
