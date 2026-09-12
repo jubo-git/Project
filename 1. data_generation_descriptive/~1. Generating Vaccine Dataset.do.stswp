@@ -15,7 +15,7 @@ copy "`repo'/2024-to-2025-cover-anual-data-tables.xlsx" "temp_2024_25.xlsx", rep
 		tempfile data12m
 		save "`data12m'"
 		
-		*T5a_UTLA24m [A8: H167]  (6in1_24m & mmr1_24m)
+		*T5a_UTLA24m [A8: H167] (6in1_24m & mmr1_24m & Hib/MenC booster)
 		import excel "temp_2024_25.xlsx", sheet("T5a_UTLA24m") cellrange(A8:I167) firstrow clear
 		drop OrganisationDataServicecode Note Numberaged24months
 		rename *, lower
@@ -24,25 +24,25 @@ copy "`repo'/2024-to-2025-cover-anual-data-tables.xlsx" "temp_2024_25.xlsx", rep
 		rename regionname region 
 		rename coverageat24monthsdtapipvh hex_24m
 		rename coverageat24monthsmmr1 mmr1_24m
-		rename coverageat12monthshipmencb hib_menc_booster_2y
-		keep onscode laname region hex_24m mmr1_24m hib_menc_booster_2y
+		rename coverageat24monthshibmencb hib_men_booster_2y
+		keep onscode laname region hex_24m mmr1_24m hib_men_booster_2y
 		drop if missing(onscode) | onscode == "ONS Code"
 		tempfile data24m
 		save "`data24m'"
 		
-		*T6a_UTLA5y [A8: K167] (6in1_5y & booster & mmr1_5y & mmr2_5y)
-		import excel "temp_2024_25.xlsx", sheet("T6a_UTLA5y") cellrange(A8:I167) firstrow clear
-		drop OrganisationDataServicecode Note Numberaged5years Coverageat5yearsHibMenCboo
+		*T6a_UTLA5y [A8: K167] (6in1_5y & DTaP/IPV-containing booster & mmr1_5y & mmr2_5y & Hib/MenC booster)
+		import excel "temp_2024_25.xlsx", sheet("T6a_UTLA5y") cellrange(A8:K167) firstrow clear
+		drop OrganisationDataServicecode Note Numberaged5years 
 		rename *, lower
 		rename localauthority laname
 		rename code onscode
 		rename regionname region 
 		rename coverageat5yearsdtapipvhib hex_5y
-		rename coverageat5yearsdtapipvboo dtp_boost_5y
+		rename coverageat5yearsdtapipvb* dtp_boost_5y
 		rename coverageat5yearsmmr1 mmr1_5y
 		rename coverageat5yearsmmr2 mmr2_5y
-		rename coverageat5yearshibmencboo hib_menc_booster_5y
-		keep onscode laname region hex_5y dtp_boost_5y mmr1_5y mmr2_5y hib_menc_booster_5y
+		rename coverageat5yearshibmencboo hib_men_booster_5y
+		keep onscode laname region hex_5y dtp_boost_5y mmr1_5y mmr2_5y hib_men_booster_5y
 		drop if missing(onscode) | onscode == "ONS Code"
 		tempfile data5y
 		save "`data5y'"
@@ -130,7 +130,7 @@ copy "`repo'/2022-2023-childhood_vaccination_datatables.xlsx" "temp_2022_23.xlsx
 		drop D E 
 		rename A onscode
 		rename B laname
-		rename C region
+		rename C region 
 		rename F hex_24m
 		rename G mmr1_24m
 		keep onscode laname region hex_24m mmr1_24m
@@ -382,21 +382,21 @@ copy "`repo'/2017-18-child-vacc-stat-eng-tab.xlsx" "temp_2017_18.xlsx", replace
 		tempfile data12m_18
 		save "`data12m_18'"
 
-		*Table 9b [B30: G202] (6in1_24m & mmr1_24m)
+		*Table 9b [B30: G202] (6in1_24m & mmr1_24m & Hib/MenC booster)
 		import excel "temp_2017_18.xlsx", sheet("Table 9b") cellrange(B30:H202) clear
 		drop D E
 		rename C onscode
 		rename B laname
 		rename F hex_24m
 		rename G mmr1_24m
-		rename H hib_menc_booster_2y
+		rename H hib_men_booster_2y
 		destring mmr1_24m, replace force
-		keep onscode laname hex_24m mmr1_24m
+		keep onscode laname hex_24m mmr1_24m hib_men_booster_2y
 		drop if missing(onscode) | onscode == "ONS Code"
 		tempfile data24m_18
 		save "`data24m_18'"
 
-		*Table 10b [B31: J203] (6in1_5y & booster & mmr1_5y & mmr2_5y & hib_menc_booster)
+		*Table 10b [B31: J203] (6in1_5y & booster & mmr1_5y & mmr2_5y & Hib/MenC booster)
 		import excel "temp_2017_18.xlsx", sheet("Table 10b") cellrange(B31:J203) clear
 		drop D E
 		rename C onscode
@@ -405,8 +405,8 @@ copy "`repo'/2017-18-child-vacc-stat-eng-tab.xlsx" "temp_2017_18.xlsx", replace
 		rename G dtp_boost_5y
 		rename H mmr1_5y
 		rename I mmr2_5y
-		rename J hib_menc_booster_5y
-		keep onscode laname hex_5y dtp_boost_5y mmr1_5y mmr2_5y
+		rename J hib_men_booster_5y
+		keep onscode laname hex_5y dtp_boost_5y mmr1_5y mmr2_5y hib_men_booster_5y
 		drop if missing(onscode) | onscode == "ONS Code"
 		tempfile data5y_18
 		save "`data5y_18'"
@@ -463,7 +463,7 @@ copy "`repo'/2016-17-nhs-immu-stat-eng-tab.xlsx" "temp_2016_17.xlsx", replace
 		tempfile data5y_17
 		save "`data5y_17'"
 
-		*Merge all temp files to create 2018 dataset 
+		*Merge all temp files to create 2017 dataset 
 		use "`data12m_17'", clear
 		merge 1:1 onscode using "`data24m_17'", nogenerate
 		merge 1:1 onscode using "`data5y_17'", nogenerate
@@ -591,20 +591,20 @@ copy "`repo'/2013-14-nhs-immu-stat-eng-tab-exc.xlsx" "temp_2013_14.xlsx", replac
 		tempfile data12m_14
 		save "`data12m_14'"
 
-		*Table 11a [B22: I194] (6in1_24m & mmr1_24m)
+		*Table 11a [B22: I194] (6in1_24m & mmr1_24m & Hib/MenC booster)
 		import excel "temp_2013_14.xlsx", sheet("Table 11a") cellrange(A22:H194) clear
 		drop D E
 		rename C onscode
 		rename B laname
 		rename F hex_24m
 		rename G mmr1_24m
-		rename H hib_menc_booster_2y
-		keep onscode laname hex_24m mmr1_24m
+		rename H hib_men_booster_2y
+		keep onscode laname hex_24m mmr1_24m hib_men_booster_2y
 		drop if missing(onscode) | onscode == "ONS Code"
 		tempfile data24m_14
 		save "`data24m_14'"
 
-		*Table 12a [B23: I195] (6in1_5y & booster & mmr1_5y & mmr2_5y)
+		*Table 12a [B23: I195] (6in1 & DTaP/IPV-containing booster & mmr1_5y & mmr2_5y & Hib/MenC booster)
 		import excel "temp_2013_14.xlsx", sheet("Table 12a") cellrange(A23:J195) clear
 		drop D E
 		rename C onscode
@@ -613,8 +613,8 @@ copy "`repo'/2013-14-nhs-immu-stat-eng-tab-exc.xlsx" "temp_2013_14.xlsx", replac
 		rename G hex_5y
 		rename H mmr1_5y
 		rename I mmr2_5y
-		rename J hib_menc_booster_5y
-		keep onscode laname hex_5y dtp_boost_5y mmr1_5y mmr2_5y
+		rename J hib_men_booster_5y
+		keep onscode laname hex_5y dtp_boost_5y mmr1_5y mmr2_5y hib_men_booster_5y
 		drop if missing(onscode) | onscode == "ONS Code"
 		tempfile data5y_14
 		save "`data5y_14'"
@@ -672,7 +672,7 @@ replace laname = "St Helens" if laname == "St. Helens"
 *Create a Northamptonshire Variable (using the average of the post 2021 regions to create a Northamptonshire 2014 - 2025 variable)
 
 	* Calculate averages for the split authorities
-	local vars dtp_12m hex_24m mmr1_24m hex_5y mmr1_5y dtp_boost_5y mmr2_5y
+	local vars dtp_12m hex_24m mmr1_24m hib_men_booster_2y hex_5y mmr1_5y dtp_boost_5y mmr2_5y hib_men_booster_5y
 
 	foreach v of local vars {
 		bysort year: egen avg_`v' = mean(cond(inlist(onscode,"E06000061","E06000062"), `v', .))
@@ -699,7 +699,7 @@ replace laname = "St Helens" if laname == "St. Helens"
 	replace laname = "Northamptonshire" if onscode == "E10000021"
 
 
-collapse (sum) dtp_12m hex_24m mmr1_24m hex_5y dtp_boost_5y mmr1_5y mmr2_5y, by(onscode laname region year)
+collapse (sum) dtp_12m hex_24m mmr1_24m hib_men_booster_2y hex_5y dtp_boost_5y mmr1_5y mmr2_5y hib_men_booster_5y, by(onscode laname region year)
 
 * Save as a clean temporary file ready for merging
 sort onscode year

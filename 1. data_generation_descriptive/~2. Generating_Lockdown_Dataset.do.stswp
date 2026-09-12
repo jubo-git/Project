@@ -149,10 +149,10 @@ import excel "temp_main.xlsx", sheet("dataset") firstrow clear
 		gen days_tier2 = (tier == 2)
 		gen days_tier3 = (tier == 3)
 		gen days_tier4 = (tier == 4)
-
+		gen total_days = days_tier1 + days_tier2 + days_tier3 + days_tier4
 		
 	**Intermediate collapse to get rid of duplicates 
-	collapse (max) tier days_tier1 days_tier2 days_tier3 days_tier4 retailshut, by(onscode date)
+	collapse (max) total_days tier days_tier1 days_tier2 days_tier3 days_tier4, by(onscode date)
 	
 	** Collapse using to capture the total cumulative duration x severity
 	collapse (sum) total_tier1 = days_tier1 ///
@@ -160,12 +160,14 @@ import excel "temp_main.xlsx", sheet("dataset") firstrow clear
 			 (sum) total_tier3 = days_tier3 ///
 			 (sum) total_tier4 = days_tier4 ///
 			 (sum) total_tier = tier ///
-			 (sum) total_retail = retailshut, by(onscode)
+			 (sum) total_tier_days = total_days, by(onscode)
   
 	
 	* quartiles (there is not enough for 5)
 	xtile tier_quartile   = total_tier, nquantiles(4)
 
+	//Try
+	
 		
 		//Hospitality dropped: diagnostic showed near-zero cross-LA variation
 		//Retail retained as sole Complacency proxy - confirmed genuine local variation.

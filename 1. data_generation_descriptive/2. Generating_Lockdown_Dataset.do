@@ -4,6 +4,10 @@ local repo "https://raw.githubusercontent.com/jubo-git/Project/main/0.%20data_ra
 copy "`repo'/Lockdown%20Data/Covid-local-restrictions-dataset.xlsx" "temp_main.xlsx", replace
 import excel "temp_main.xlsx", sheet("dataset") firstrow clear
 
+**Instead of loading excel sheet 
+ use "C:\Users\44799\OneDrive - MMU\03 DISSERTATION\GITHUB\2. data_clean\lockdown_raw_data.dta", clear
+
+
 ** Tidying (generic and making variables more streamlined)
 
 	* maintain english data only 
@@ -158,11 +162,12 @@ import excel "temp_main.xlsx", sheet("dataset") firstrow clear
 			 (sum) total_tier = tier ///
 			 (sum) total_retail = retailshut, by(onscode)
   
-  recode total_tier1 total_tier2 total_tier3 total_tier4 (0 = .)
 	
 	* quartiles (there is not enough for 5)
 	xtile tier_quartile   = total_tier, nquantiles(4)
 
+	//Try
+	
 		
 		//Hospitality dropped: diagnostic showed near-zero cross-LA variation
 		//Retail retained as sole Complacency proxy - confirmed genuine local variation.

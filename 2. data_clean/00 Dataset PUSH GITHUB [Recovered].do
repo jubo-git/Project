@@ -7,6 +7,6 @@ cd "C:\Users\44799\OneDrive - MMU\03 DISSERTATION\GITHUB"
 
 !git pull
 !git add .
-!git commit -m "Adding back in 2014"
+!git commit -m "Removed change from 0 to (.) for threshold checks"
 !git push -u origin main
 

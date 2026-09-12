@@ -147,7 +147,8 @@ estat vif
 	xtreg mmr1_5y ib1.tier_quartile#1.post i.year, fe vce(cluster onscode)
 	xtreg mmr2_5y ib1.tier_quartile#1.post i.year, fe vce(cluster onscode)
 
-	
+	margins tier_quartile#post
+	marginsplot
 
 	* Findings wording: total_tier3#1.post is significantly more negative than total_tier2#1.post.
 	* Interpretation: "While exposure to Tier 2 reduced uptake by X%, each day in Tier 3 reduced 
