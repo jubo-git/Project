@@ -7,6 +7,6 @@ cd "C:\Users\44799\OneDrive - MMU\03 DISSERTATION\GITHUB"
 
 !git pull
 !git add .
-!git commit -m "Updating Post (absolute mare so go back to this point if neccessary)"
+!git commit -m "Adding Hib_Booster just in case"
 !git push -u origin main
 
