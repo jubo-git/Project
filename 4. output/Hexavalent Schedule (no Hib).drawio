@@ -1,0 +1,127 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Page-1" id="zVtFFWl0xAgryakCGZO-">
+    <mxGraphModel dx="1653" dy="811" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="qbI6WhEpBqqeu18ExwmM-1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fontSize=9;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;opacity=60;fontFamily=Courier New;fontStyle=1" value="" vertex="1">
+          <mxGeometry height="20" width="399" x="151" y="379" as="geometry" />
+        </mxCell>
+        <mxCell id="qbI6WhEpBqqeu18ExwmM-2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=9;opacity=40;fontColor=#006600;fontFamily=Courier New;fontStyle=1" value="Optimal Doses (8, 12, 16 WK)" vertex="1">
+          <mxGeometry height="20" width="82.5" x="151" y="340" as="geometry" />
+        </mxCell>
+        <mxCell id="qbI6WhEpBqqeu18ExwmM-3" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#99FFCC;strokeColor=#6c8ebf;dashed=1;dashPattern=1 4;opacity=40;fontSize=9;fontColor=#190033;fontFamily=Courier New;fontStyle=1" value="Primary Schedule Completed by 1 year" vertex="1">
+          <mxGeometry height="20" width="110" x="151.5" y="455" as="geometry" />
+        </mxCell>
+        <mxCell id="qbI6WhEpBqqeu18ExwmM-4" parent="1" style="ellipse;whiteSpace=wrap;html=1;shapeInside=1;aspect=fixed;fillColor=#99FFCC;strokeColor=#36393d;fontSize=8;fontFamily=Courier New;fontStyle=1;fontColor=#190033;" value="HEX1" vertex="1">
+          <mxGeometry height="25" width="25" x="151" y="378" as="geometry" />
+        </mxCell>
+        <mxCell id="qbI6WhEpBqqeu18ExwmM-5" parent="1" style="ellipse;whiteSpace=wrap;html=1;shapeInside=1;aspect=fixed;fillColor=#99CCFF;strokeColor=#36393d;fontSize=8;fontFamily=Courier New;verticalAlign=middle;fontStyle=1;fontColor=#190033;" value="Hib Bo" vertex="1">
+          <mxGeometry height="25" width="25" x="309.09" y="376.5" as="geometry" />
+        </mxCell>
+        <mxCell id="qbI6WhEpBqqeu18ExwmM-6" parent="1" style="ellipse;whiteSpace=wrap;html=1;shapeInside=1;aspect=fixed;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=8;fontFamily=Courier New;fontStyle=1" value="DTP Bo" vertex="1">
+          <mxGeometry height="25" width="25" x="451.05" y="378" as="geometry" />
+        </mxCell>
+        <mxCell id="qbI6WhEpBqqeu18ExwmM-8" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#99FFCC;strokeColor=#b85450;dashed=1;dashPattern=1 4;opacity=50;fontSize=9;fontFamily=Courier New;fontStyle=1;fontColor=#190033;" value="Primary Schedule Completed by 2 year" vertex="1">
+          <mxGeometry height="20" width="213.04" x="151" y="486" as="geometry" />
+        </mxCell>
+        <mxCell id="qbI6WhEpBqqeu18ExwmM-25" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontSize=12;fontStyle=1;fontFamily=Courier New;" value="Timeline of Hexavalent Vaccination,&amp;nbsp; Hib/MenC Booster (18 months) and DTaP/P Booster" vertex="1">
+          <mxGeometry height="30" width="405" x="255" y="300" as="geometry" />
+        </mxCell>
+        <mxCell id="qbI6WhEpBqqeu18ExwmM-10" edge="1" parent="1" style="endArrow=none;dashed=1;html=1;rounded=0;fontSize=9;startSize=8;endSize=8;curved=1;fontFamily=Courier New;fontStyle=1" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="110" y="423.33" as="sourcePoint" />
+            <mxPoint x="670" y="423.3333333333333" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="qbI6WhEpBqqeu18ExwmM-11" connectable="0" parent="1" style="group;fontSize=9;fontFamily=Courier New;fontStyle=1" value="" vertex="1">
+          <mxGeometry height="40" width="49.09090909090909" x="260" y="410" as="geometry" />
+        </mxCell>
+        <mxCell id="qbI6WhEpBqqeu18ExwmM-12" edge="1" parent="qbI6WhEpBqqeu18ExwmM-11" style="endArrow=none;html=1;rounded=0;fontSize=9;startSize=8;endSize=8;curved=1;fontFamily=Courier New;fontStyle=1" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="24.349090909090904" y="26.66666666666667" as="sourcePoint" />
+            <mxPoint x="24.349090909090904" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="qbI6WhEpBqqeu18ExwmM-13" parent="qbI6WhEpBqqeu18ExwmM-11" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontSize=9;fontFamily=Courier New;fontStyle=1" value="1 year" vertex="1">
+          <mxGeometry height="20" width="49.09090909090909" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="qbI6WhEpBqqeu18ExwmM-14" connectable="0" parent="1" style="group;fontSize=9;fontFamily=Courier New;fontStyle=1" value="" vertex="1">
+          <mxGeometry height="40" width="49.09090909090909" x="339.99545454545455" y="408" as="geometry" />
+        </mxCell>
+        <mxCell id="qbI6WhEpBqqeu18ExwmM-15" edge="1" parent="qbI6WhEpBqqeu18ExwmM-14" style="endArrow=none;html=1;rounded=0;fontSize=9;startSize=8;endSize=8;curved=1;fontFamily=Courier New;fontStyle=1" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="24.349090909090904" y="26.66666666666667" as="sourcePoint" />
+            <mxPoint x="24.349090909090904" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="qbI6WhEpBqqeu18ExwmM-16" parent="qbI6WhEpBqqeu18ExwmM-14" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontSize=9;fontFamily=Courier New;fontStyle=1" value="&lt;span style=&quot;color: rgb(25, 0, 51);&quot;&gt;2 year&lt;/span&gt;" vertex="1">
+          <mxGeometry height="20" width="49.09090909090909" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="qbI6WhEpBqqeu18ExwmM-17" connectable="0" parent="1" style="group;fontSize=9;fontFamily=Courier New;fontStyle=1" value="" vertex="1">
+          <mxGeometry height="40" width="49.09090909090909" x="539.9954545454545" y="408" as="geometry" />
+        </mxCell>
+        <mxCell id="qbI6WhEpBqqeu18ExwmM-18" edge="1" parent="qbI6WhEpBqqeu18ExwmM-17" style="endArrow=none;html=1;rounded=0;fontSize=9;startSize=8;endSize=8;curved=1;fontFamily=Courier New;fontStyle=1" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="24.349090909090904" y="26.66666666666667" as="sourcePoint" />
+            <mxPoint x="24.349090909090904" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="qbI6WhEpBqqeu18ExwmM-19" parent="qbI6WhEpBqqeu18ExwmM-17" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontSize=9;fontFamily=Courier New;fontStyle=1" value="&lt;span style=&quot;color: rgb(234, 107, 102);&quot;&gt;5 year&lt;/span&gt;" vertex="1">
+          <mxGeometry height="20" width="49.09090909090909" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="qbI6WhEpBqqeu18ExwmM-20" connectable="0" parent="1" style="group;fontSize=9;fontFamily=Courier New;fontStyle=1" value="" vertex="1">
+          <mxGeometry height="40" width="49.09090909090909" x="479.9981818181818" y="410" as="geometry" />
+        </mxCell>
+        <mxCell id="qbI6WhEpBqqeu18ExwmM-21" edge="1" parent="qbI6WhEpBqqeu18ExwmM-20" style="endArrow=none;html=1;rounded=0;fontSize=9;startSize=8;endSize=8;curved=1;fontFamily=Courier New;fontStyle=1" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="24.349090909090904" y="26.66666666666667" as="sourcePoint" />
+            <mxPoint x="24.349090909090904" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="qbI6WhEpBqqeu18ExwmM-22" parent="qbI6WhEpBqqeu18ExwmM-20" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontSize=9;fontFamily=Courier New;fontStyle=1" value="4 year" vertex="1">
+          <mxGeometry height="20" width="49.09090909090909" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="qbI6WhEpBqqeu18ExwmM-23" edge="1" parent="1" style="endArrow=none;html=1;rounded=0;fontSize=9;startSize=8;endSize=8;curved=1;fontFamily=Courier New;fontStyle=1" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="436.6218181818182" y="436.6666666666667" as="sourcePoint" />
+            <mxPoint x="436.6218181818182" y="410" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="qbI6WhEpBqqeu18ExwmM-24" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontSize=9;fontFamily=Courier New;fontStyle=1" value="3 year" vertex="1">
+          <mxGeometry height="20" width="49.09090909090909" x="412.27272727272725" y="430" as="geometry" />
+        </mxCell>
+        <mxCell id="qbI6WhEpBqqeu18ExwmM-26" connectable="0" parent="1" style="group;fontSize=9;fontFamily=Courier New;fontStyle=1" value="" vertex="1">
+          <mxGeometry height="40" width="49.09090909090909" x="130" y="410" as="geometry" />
+        </mxCell>
+        <mxCell id="qbI6WhEpBqqeu18ExwmM-27" edge="1" parent="qbI6WhEpBqqeu18ExwmM-26" style="endArrow=none;html=1;rounded=0;fontSize=9;startSize=8;endSize=8;curved=1;fontFamily=Courier New;fontStyle=1" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="24.349090909090904" y="26.66666666666667" as="sourcePoint" />
+            <mxPoint x="24.349090909090904" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="qbI6WhEpBqqeu18ExwmM-28" parent="qbI6WhEpBqqeu18ExwmM-26" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontSize=9;fontFamily=Courier New;fontStyle=1" value="&lt;font color=&quot;#190033&quot;&gt;Birth&lt;/font&gt;" vertex="1">
+          <mxGeometry height="20" width="49.09090909090909" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="qbI6WhEpBqqeu18ExwmM-29" parent="1" style="ellipse;whiteSpace=wrap;html=1;shapeInside=1;aspect=fixed;fillColor=#99FFCC;strokeColor=#36393d;fontSize=8;fontFamily=Courier New;fontStyle=1;fontColor=#190033;" value="HEX2" vertex="1">
+          <mxGeometry height="25" width="25" x="180" y="377.5" as="geometry" />
+        </mxCell>
+        <mxCell id="qbI6WhEpBqqeu18ExwmM-31" parent="1" style="ellipse;whiteSpace=wrap;html=1;shapeInside=1;aspect=fixed;fillColor=#99FFCC;strokeColor=#36393d;fontSize=8;fontFamily=Courier New;fontStyle=1;fontColor=#190033;" value="HEX3&lt;div&gt;&lt;br&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="25" width="25" x="209" y="378" as="geometry" />
+        </mxCell>
+        <mxCell id="qbI6WhEpBqqeu18ExwmM-32" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;dashed=1;dashPattern=1 4;opacity=50;fontSize=9;fontFamily=Courier New;fontStyle=1;" value="Primary Schedule Completed by 5&lt;span style=&quot;background-color: transparent;&quot;&gt;&amp;nbsp;year&lt;/span&gt;" vertex="1">
+          <mxGeometry height="20" width="95.14" x="461.36" y="620" as="geometry" />
+        </mxCell>
+        <mxCell id="qbI6WhEpBqqeu18ExwmM-33" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#99CCFF;strokeColor=#b85450;dashed=1;dashPattern=1 4;opacity=50;fontSize=9;fontFamily=Courier New;fontStyle=1;fontColor=#190033;" value="Hib/MenC Booster Completed by 2 year" vertex="1">
+          <mxGeometry height="20" width="55.45" x="309.09" y="520" as="geometry" />
+        </mxCell>
+        <mxCell id="qbI6WhEpBqqeu18ExwmM-34" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#99FFCC;strokeColor=#6c8ebf;dashed=1;dashPattern=1 4;opacity=40;fontSize=9;fontColor=#190033;fontFamily=Courier New;fontStyle=1" value="Primary Schedule Completed by 5 year" vertex="1">
+          <mxGeometry height="20" width="405" x="151.5" y="550" as="geometry" />
+        </mxCell>
+        <mxCell id="qbI6WhEpBqqeu18ExwmM-35" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#99CCFF;strokeColor=#b85450;dashed=1;dashPattern=1 4;opacity=50;fontSize=9;fontFamily=Courier New;fontStyle=1;fontColor=#190033;" value="Hib/MenC Booster Completed by 2 year" vertex="1">
+          <mxGeometry height="20" width="233.73" x="322.77" y="580" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
