@@ -23,6 +23,7 @@ merge m:1 onscode using "2. data_clean/nomis_dataset.dta"
 	drop area  totalallhouseholds _merge // remove unncessary variables for analysis 
 	
 	mvdecode _all, mv(0)
+	mvdecode *_1y *_2y *_5y, mv(0)
 	replace hex_2y = 95.7 in 1104
 	
 	**Prepare for DiD analysis by encoding ONS, generating post variable and outlining panel data 
