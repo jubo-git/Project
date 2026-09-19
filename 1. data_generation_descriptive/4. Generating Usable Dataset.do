@@ -58,8 +58,8 @@ merge m:1 onscode using "2. data_clean/nomis_dataset.dta"
 	rename sikh sikh_pct
 	rename otherreligion otherreligion_pct
 	
-	//UKHSA error
-	replace hex_2y = 95.7 in 1104
+	recode * (0=.)
+	
 	
 //	cd "C:\Users\44799\OneDrive - MMU\03 DISSERTATION\GITHUB\"	
 	save "2. data_clean/full_dataset.dta", replace

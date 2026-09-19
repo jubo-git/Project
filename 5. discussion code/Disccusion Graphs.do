@@ -1,6 +1,15 @@
 use "https://raw.githubusercontent.com/jubo-git/Project/main/2.%20data_clean/full_dataset.dta", clear
 preserve
 
+
+
+
+**# Discussion: RQ2
+*Can you show the changes in co-efficients 
+
+
+**# NOT USING - but was to demonstrate the pre-existing MMR trends before and after intervention (think better illustrated through margins )
+
 * Calculate mean LA-level coverage for each year
 collapse (mean) mmr1_24m mmr1_5y mmr2_5y, by(year)
 
