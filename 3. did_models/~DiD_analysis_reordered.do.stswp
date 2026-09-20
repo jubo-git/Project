@@ -99,40 +99,34 @@ xtreg hib_men_boost_5y c.total_tier#i.post ///
 ********************************************************************************
 
 **# Quartile Model 1: Hexavalent at 1 year
-xtreg hex_1y ib1.tier_quartile#1.post i.year, ///
+xtreg hex_1y ib1.tier_quartile##1.post i.year, ///
     fe vce(cluster onscode)
 
 **# Quartile Model 2: Hexavalent at 2 years
-xtreg hex_2y ib1.tier_quartile#1.post i.year, ///
+xtreg hex_2y ib1.tier_quartile##1.post i.year, ///
     fe vce(cluster onscode)
 
 **# Quartile Model 3: MMR1 at 2 years
-xtreg mmr1_2y ib1.tier_quartile#1.post i.year, ///
+xtreg mmr1_2y ib1.tier_quartile##1.post i.year, ///
     fe vce(cluster onscode)
 
-**# Quartile Model 4: Hib/MenC Booster at 2 years
-xtreg hib_men_boost_2y ib1.tier_quartile#1.post i.year, ///
-    fe vce(cluster onscode)
 
 **# Quartile Model 5: Hexavalent at 5 years
-xtreg hex_5y ib1.tier_quartile#1.post i.year, ///
+xtreg hex_5y ib1.tier_quartile##1.post i.year, ///
     fe vce(cluster onscode)
 
 **# Quartile Model 6: DTP Booster at 5 years
-xtreg dtp_boost_5y ib1.tier_quartile#1.post i.year, ///
+xtreg dtp_boost_5y ib1.tier_quartile##1.post i.year, ///
     fe vce(cluster onscode)
 
 **# Quartile Model 7: MMR1 at 5 years
-xtreg mmr1_5y ib1.tier_quartile#1.post i.year, ///
+xtreg mmr1_5y ib1.tier_quartile##1.post i.year, ///
     fe vce(cluster onscode)
 
 **# Quartile Model 8: MMR2 at 5 years
-xtreg mmr2_5y ib1.tier_quartile#1.post i.year, ///
+xtreg mmr2_5y ib1.tier_quartile##1.post i.year, ///
     fe vce(cluster onscode)
 
-**# Quartile Model 9: Hib/MenC Booster at 5 years
-xtreg hib_men_boost_5y ib1.tier_quartile#1.post i.year, ///
-    fe vce(cluster onscode)
 
 
 **# Marginal Effects for Quartile Model

@@ -21,7 +21,11 @@ merge m:1 onscode using "2. data_clean/nomis_dataset.dta"
 	**Investigating Mismatched via _merge variable 
 	tab laname _merge //note there is no NOMIS data for Northamptonshire and Cumbria 
 	drop area  totalallhouseholds _merge // remove unncessary variables for analysis 
-
+	
+	mvdecode _all, mv(0)
+	mvdecode *_1y *_2y *_5y, mv(0)
+	replace hex_2y = 95.7 in 1104
+	
 	**Prepare for DiD analysis by encoding ONS, generating post variable and outlining panel data 
 	encode onscode, gen(ons_id)
 	destring year, replace
@@ -57,8 +61,6 @@ merge m:1 onscode using "2. data_clean/nomis_dataset.dta"
 	rename muslim muslim_pct
 	rename sikh sikh_pct
 	rename otherreligion otherreligion_pct
-	
-	recode * (0=.)
 	
 	
 //	cd "C:\Users\44799\OneDrive - MMU\03 DISSERTATION\GITHUB\"	
